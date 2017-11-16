@@ -86,7 +86,7 @@ public class lSystems : MonoBehaviour {
 		float speed = (meteorSize/(waitTime *.5f)/framesperSecond);
 		float speed2 = (meteorSize / (waitTime * .4f) / framesperSecond);
 		while (timeElapsed < (waitTime * .5f)){
-			newZero.transform.position = newZero.transform.position + (newZero.transform.forward * speed);
+			newZero.transform.position = newZero.transform.position + (newZero.transform.forward * speed) + (newZero.transform.up * speed);
 			timeElapsed = timeElapsed + (1f / framesperSecond);
 			yield return new WaitForSeconds (1f / framesperSecond);
 		}
@@ -116,7 +116,7 @@ public class lSystems : MonoBehaviour {
 	// Update is called once per frame
 	void Update () {
 
-		fractalAngley = meteor.transform.eulerAngles.y/(waitTime*.1f)/framesperSecond;
+		//fractalAngley = meteor.transform.eulerAngles.y/(waitTime*.1f)/framesperSecond;
 
 		if (Input.GetKeyDown(KeyCode.Space)){
 			StartCoroutine(fractalTree(fractalAngley));
