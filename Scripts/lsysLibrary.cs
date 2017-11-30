@@ -244,7 +244,7 @@ public class lsysLibrary : MonoBehaviour {
 	void saveState () {
 		//Save Branch Point
 		lastactiveObject = activeObject;
-		lsysItt.StartCoroutine(renderWait ());
+		StartCoroutine(renderWait ());
 
 	}
 
@@ -336,6 +336,8 @@ public class lsysLibrary : MonoBehaviour {
 			}
 		} else {
 			Debug.Log ("All Done!");
+			StartCoroutine (goAgain ());
+
 
 		}
 	}

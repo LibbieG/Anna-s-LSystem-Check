@@ -206,7 +206,7 @@ public class stringLSystem : lsysLibrary {
 				angleDown = Set_angleDown;
 
 				ruleset = new Rule[1];
-				ruleset [0] = new Rule ('F', "FF+F++F+F");
+				ruleset [0] = new Rule ('F', "FF+UFS+F+UFS+FF");
 
 			} else if (randomVarient == lSystemOptions.Fractal_Tree) {
 				angleLeft = 45f;
