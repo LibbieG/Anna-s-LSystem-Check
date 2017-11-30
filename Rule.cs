@@ -2,21 +2,21 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-public class Rule : MonoBehaviour {
+public class Rule {
 
 	char a;
 	string b;
 
-	Rule(char a_, string b_) {
+	public Rule(char a_, string b_) {
 		a = a_;
 		b = b_; 
 	}
 
-	char getA() {
+	public char getA() {
 		return a;
 	}
 
-	string getB() {
+	public string getB() {
 		return b;
 	}
 
