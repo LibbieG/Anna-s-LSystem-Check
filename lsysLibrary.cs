@@ -3,8 +3,10 @@ using System.Collections.Generic;
 using UnityEngine;
 
 public class lsysLibrary : MonoBehaviour {
-	static string currentString = "F+F";
-	static float length;
+	static string currentString;
+	static float length1;
+	static float length2;
+	static float length3;
 	static float speed;
 	static GameObject prefab;
 	static GameObject activeObject = stringLSystem.lsystemRoot; 
@@ -30,12 +32,50 @@ public class lsysLibrary : MonoBehaviour {
 
 	}
 
-	static IEnumerator moveForward (GameObject obj){
+	static IEnumerator moveForward1 (GameObject obj, float dist){
 		float distanceTravelled = 0;
-		length = obj.GetComponent<Renderer> ().bounds.size.y;
+		length1 = stringLSystem.PrefabBounds * obj.transform.localScale.z * dist;
+
+		Debug.Log (length1);
 
 		while (iterate == true) {
-			if (distanceTravelled < length) {
+			if (distanceTravelled < length1) {
+				speed = stringLSystem.speed * Time.deltaTime * obj.GetComponent<Renderer> ().bounds.size.y;
+				obj.transform.position = obj.transform.position + (obj.transform.forward * speed);
+				distanceTravelled = distanceTravelled + speed;
+				yield return new WaitForEndOfFrame ();
+			} else {
+				yield break;
+			}
+		}
+	}
+
+	static IEnumerator moveForward2 (GameObject obj, float dist){
+		float distanceTravelled = 0;
+		length2 = stringLSystem.PrefabBounds * obj.transform.localScale.z * dist;
+
+		Debug.Log (length2);
+
+		while (iterate == true) {
+			if (distanceTravelled < length2) {
+				speed = stringLSystem.speed * Time.deltaTime * obj.GetComponent<Renderer> ().bounds.size.y;
+				obj.transform.position = obj.transform.position + (obj.transform.forward * speed);
+				distanceTravelled = distanceTravelled + speed;
+				yield return new WaitForEndOfFrame ();
+			} else {
+				yield break;
+			}
+		}
+	}
+
+	static IEnumerator moveForward3 (GameObject obj, float dist){
+		float distanceTravelled = 0;
+		length3 = stringLSystem.PrefabBounds * obj.transform.localScale.z * dist;
+
+		Debug.Log (length3);
+
+		while (iterate == true) {
+			if (distanceTravelled < length3) {
 				speed = stringLSystem.speed * Time.deltaTime * obj.GetComponent<Renderer> ().bounds.size.y;
 				obj.transform.position = obj.transform.position + (obj.transform.forward * speed);
 				distanceTravelled = distanceTravelled + speed;
@@ -51,25 +91,33 @@ public class lsysLibrary : MonoBehaviour {
 
 	static void fTurtle () {
 		
-		GameObject newObject = Instantiate (prefab, activeObject.transform.position, activeObject.transform.rotation);
-		activeObject = newObject;
-		instance.StartCoroutine (moveForward (activeObject));
+		GameObject newObject1 = Instantiate (prefab, activeObject.transform.position, activeObject.transform.rotation);
+		GameObject newObject2 = Instantiate (prefab, activeObject.transform.position, activeObject.transform.rotation);
+		GameObject newObject3 = Instantiate (prefab, activeObject.transform.position, activeObject.transform.rotation);
+		activeObject = newObject3;
+		instance.StartCoroutine (moveForward3 (activeObject, 3f));
+		instance.StartCoroutine (moveForward2 (newObject1, 1f));
+		instance.StartCoroutine (moveForward1 (newObject2, 2f));
 
 	}
 
 	static void gTurtle () {
-		instance.StartCoroutine (moveForward (activeObject));
+		instance.StartCoroutine (moveForward3 (activeObject, 3f));
 	}
 
 	static IEnumerator plusTurtle (GameObject obj) {
-		float angleTravelled = 0;
+		float angleTravelled = 0; 
 		while (iterate == true) {
 			if (angleTravelled < stringLSystem.angleLeft) {
 				speed = stringLSystem.speed * Time.deltaTime;
 				obj.transform.Rotate (0f, stringLSystem.angleLeft * speed, 0f);
 				angleTravelled = angleTravelled + (stringLSystem.angleLeft * speed);
+				Debug.Log (angleTravelled + "Out of" + stringLSystem.angleLeft);
 				yield return new WaitForEndOfFrame ();
 			} else {
+				float adjustment = angleTravelled - stringLSystem.angleLeft;
+				obj.transform.Rotate (0f, (-1f * adjustment), 0f);
+				yield return new WaitForEndOfFrame ();
 				instance.StartCoroutine(renderWait ());
 				yield break;
 			}
@@ -86,6 +134,9 @@ public class lsysLibrary : MonoBehaviour {
 				Debug.Log (angleTravelled + "Out of" + stringLSystem.angleRight);
 				yield return new WaitForEndOfFrame ();
 			} else {
+				float adjustment = angleTravelled - stringLSystem.angleRight;
+				obj.transform.Rotate (0f, adjustment, 0f);
+				yield return new WaitForEndOfFrame ();
 				instance.StartCoroutine(renderWait ());
 				yield break;
 			}
@@ -101,6 +152,9 @@ public class lsysLibrary : MonoBehaviour {
 				angleTravelled = angleTravelled + (stringLSystem.angleUp * speed);
 			yield return new WaitForEndOfFrame ();
 		} else {
+				float adjustment = angleTravelled - stringLSystem.angleUp;
+				obj.transform.Rotate (0f, (-1f * adjustment), 0f);
+				yield return new WaitForEndOfFrame ();
 				instance.StartCoroutine(renderWait ());
 				yield break;
 		}
@@ -116,6 +170,9 @@ public class lsysLibrary : MonoBehaviour {
 				angleTravelled = angleTravelled + (stringLSystem.angleDown * speed);
 				yield return new WaitForEndOfFrame ();
 			} else {
+				float adjustment = angleTravelled - stringLSystem.angleDown;
+				obj.transform.Rotate (0f, (adjustment), 0f);
+				yield return new WaitForEndOfFrame ();
 				instance.StartCoroutine(renderWait ());
 				yield break;
 			}
@@ -158,6 +215,7 @@ public class lsysLibrary : MonoBehaviour {
 
 	public static void render () {
 		currentString = stringLSystem.currentString;
+
 		if (i < currentString.Length) { 
 			if (activeObject != null && prefab != null) {
 				char c = currentString [i];
@@ -170,7 +228,7 @@ public class lsysLibrary : MonoBehaviour {
 					pTurtle ();
 				} else if (c == '-') {
 					mTurtle ();
-				} else if (c == 'U') {
+				} else if (c == 'u') {
 					upTurtle ();
 				} else if (c == 'D') {
 					downTurtle ();

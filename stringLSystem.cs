@@ -9,6 +9,7 @@ public class stringLSystem : MonoBehaviour {
 	public GameObject Prefab;
 	public static GameObject lsystemRoot;
 	public GameObject rootObject;
+	public static float PrefabBounds;
 
 
 	//Static Variables:
@@ -49,7 +50,7 @@ public class stringLSystem : MonoBehaviour {
 	public enum variables {X, Y, F, G
 	};
 
-
+	public bool Randomize_Variations;
 	public lSystemOptions [] Variations;
 
 	public variables[] Variables_1;
@@ -80,6 +81,7 @@ public class stringLSystem : MonoBehaviour {
 		speed = Set_Speed;
 		lsystemPrefab = Prefab;
 		lsystemRoot = rootObject;
+		PrefabBounds = Prefab.GetComponent<Renderer> ().bounds.size.z;
 
 		if (Variations [0] == lSystemOptions.Custom) {
 			angleLeft = Set_angleLeft;
@@ -171,12 +173,90 @@ public class stringLSystem : MonoBehaviour {
 	
 	// Update is called once per frame
 	void Update () {
-		if (Input.GetKeyDown(KeyCode.Space)){
-
-
-			generate (currentString);
+		if (Input.GetKeyDown (KeyCode.A)) {
 			lsysLibrary.render ();
+		}
 
+		if (Input.GetKeyDown (KeyCode.Space)) {
+
+			if (Randomize_Variations == true) {
+				int i = Random.Range (0, (Variations.Length - 1));
+
+				lSystemOptions randomVarient = Variations [i];
+
+				if (randomVarient == lSystemOptions.Custom) {
+					int v = Random.Range (0, 2);
+
+					angleLeft = Random.Range (Random_AngleLeft_Min, Random_AngleLeft_Max);
+					angleRight = Random.Range (Random_AngleRight_Min, Random_AngleRight_Max);
+					angleUp = Random.Range (Random_AngleUp_Min, Random_AngleUp_Max);
+					angleDown = Random.Range (Random_AngleDown_Min, Random_AngleDown_Max);
+
+
+					if (v == 0) {
+						ruleset = new Rule[Variables_1.Length];
+						for (int j = 0; j < Variables_1.Length; j++) {
+							ruleset [i] = new Rule (Variables_1 [i].ToString () [0], Custom_LSystemRules_1 [i]);
+						}
+					} else if (v == 1) {
+						ruleset = new Rule[Variables_2.Length];
+						for (int j = 0; j < Variables_2.Length; j++) {
+							ruleset [i] = new Rule (Variables_2 [i].ToString () [0], Custom_LSystemRules_2 [i]);
+						}
+					} else {
+						ruleset = new Rule[Variables_3.Length];
+						for (int j = 0; j < Variables_3.Length; j++) {
+							ruleset [i] = new Rule (Variables_3 [i].ToString () [0], Custom_LSystemRules_3 [i]);
+						}
+					}
+
+					   
+				} else if (randomVarient == lSystemOptions.Diamond) {
+					angleLeft = 90f;
+					angleRight = 90f;
+					angleUp = Set_angleUp;
+					angleDown = Set_angleDown;
+
+					ruleset = new Rule[1];
+					ruleset [0] = new Rule ('F', "FuF+F++F+Fu");
+
+				} else if (randomVarient == lSystemOptions.Fractal_Tree) {
+					angleLeft = 45f;
+					angleRight = 45f;
+					angleUp = Set_angleUp;
+					angleDown = Set_angleDown;
+
+					ruleset = new Rule[2];
+					ruleset [0] = new Rule ('F', "FuF");
+					ruleset [1] = new Rule ('X', "F[X]uX");
+
+				} else if (randomVarient == lSystemOptions.Seaweed) {
+					angleLeft = 22f;
+					angleRight = 22f;
+					angleUp = 25f;
+					angleDown = 10f;
+
+					ruleset = new Rule[1];
+					ruleset [0] = new Rule ('F', "FF-[-F+F+F]u+[+F-F-F]u");
+
+				} 
+				
+			} else {
+				if (Randomize_Speed == true)
+					speed = Random.Range (Random_Speed_Min, Random_Speed_Max); 
+				if (Randomize_AngleLeft == true)
+					angleLeft = Random.Range (Random_AngleLeft_Min, Random_AngleLeft_Max);
+				if (Randomize_AngleRight == true)
+					angleRight = Random.Range (Random_AngleRight_Min, Random_AngleRight_Max);
+				if (Randomize_AngleUp == true)
+					angleUp = Random.Range (Random_AngleUp_Min, Random_AngleUp_Max);
+				if (Randomize_AngleDown == true)
+					angleDown = Random.Range (Random_AngleDown_Min, Random_AngleDown_Max);
+			}
+
+			Debug.Log (angleRight);
+			lsysLibrary.render ();
+			generate (currentString);
 		}
 	}
 }
