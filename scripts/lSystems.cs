@@ -9,7 +9,8 @@ public class lSystems : MonoBehaviour {
 	public float waitTime = 3;
 	public float framesperSecond = 4;
 	public bool iterateBool = true;
-	public float fractalAngley = 90;
+	public static float fractalAngley = 90;
+	static float meteorSize;
 
 
 	//Lists of Variables (the zeros and the ones etc)
@@ -18,21 +19,15 @@ public class lSystems : MonoBehaviour {
 
 		
 
-	IEnumerator fractalTree (float fractalAngley){
+	IEnumerator fractalTree (){
 		fractalZeros.Add (meteor);
-		float meteorSizeY = meteor.GetComponent<Renderer> ().bounds.size.y;
-		float meteorSizeX = meteor.GetComponent<Renderer> ().bounds.size.x;		//Establish Axiom Root Object
-		//Variable 0  = For Each 0 create a meteor object attached to a previous meteor object, this is 0
-		//Variable 1 = For Each 1 create a meteor object attached to a previous meteor object
-		//Variable a = push position and angle turn left 90 degrees
-		//Variable b = push position and angle turn right 90 degrees
 
 		while (iterateBool == true) {
 			var zeroCopy = new List<GameObject> (fractalZeros);
 			Debug.Log ("Hi There" + fractalAngley);
 			if (fractalZeros.Count != 0) {
 				foreach (GameObject fractalZero in zeroCopy) {	
-					fractalZeroFunction (fractalZero,meteorSizeY, fractalAngley);
+					fractalZeroFunction (fractalZero);
 				}
 			}
 
@@ -42,7 +37,7 @@ public class lSystems : MonoBehaviour {
 	}
 		
 
-	void fractalZeroFunction (GameObject fractalZero, float meteorSize, float fractalAngley) {
+	void fractalZeroFunction (GameObject fractalZero) {
 
 
 		//Make 0 inactive, it's a parent now, it has served it's purpose
@@ -61,8 +56,8 @@ public class lSystems : MonoBehaviour {
 		fractalZeros.Add(newObject2);
 
 		//push position by one, rotate 90 degrees and then push position by one again
-		StartCoroutine (ZeroGrowth(newObject1, true, fractalAngley));
-		StartCoroutine (ZeroGrowth(newObject2, false, fractalAngley));
+		StartCoroutine (ZeroGrowth(newObject1, true));
+		StartCoroutine (ZeroGrowth(newObject2, false));
 	}
 
 	IEnumerator OneGrowth (GameObject newStatic){
@@ -79,9 +74,9 @@ public class lSystems : MonoBehaviour {
 	
 	}
 
-	IEnumerator ZeroGrowth (GameObject newZero, bool left, float fractalAngley){
+	IEnumerator ZeroGrowth (GameObject newZero, bool left){
 		Debug.Log (fractalAngley);
-		float meteorSize = newZero.GetComponent<Renderer> ().bounds.size.y;
+		meteorSize = newZero.GetComponent<Renderer> ().bounds.size.y;
 		float timeElapsed = 0f;
 		float speed = (meteorSize/(waitTime *.5f)/framesperSecond);
 		float speed2 = (meteorSize / (waitTime * .4f) / framesperSecond);
@@ -119,7 +114,7 @@ public class lSystems : MonoBehaviour {
 		//fractalAngley = meteor.transform.eulerAngles.y/(waitTime*.1f)/framesperSecond;
 
 		if (Input.GetKeyDown(KeyCode.Space)){
-			StartCoroutine(fractalTree(fractalAngley));
+			StartCoroutine(fractalTree());
 		}
 			
 	}

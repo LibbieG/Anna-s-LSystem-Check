@@ -124,6 +124,7 @@ public class lsysLibrary : MonoBehaviour {
 		yield return new WaitForEndOfFrame();
 		yield return new WaitForEndOfFrame();
 		Debug.Log ("Fire!");
+		Debug.Log ("renderWait i:  " + i);
 		render (str, active, l, r, u, d, size, i);
 
 	}
@@ -142,10 +143,10 @@ public class lsysLibrary : MonoBehaviour {
 		}
 
 		Debug.Log ("string: " + str);
-
+		Debug.Log ("i:  " +i);
 		if (i < str.Length) { 
 			if (prefab != null) {
-				prefabBounds = prefab.GetComponent<Renderer> ().bounds.size.z;
+				prefabBounds = prefab.GetComponent<BoxCollider> ().bounds.size.z;
 				prefabScale = prefab.transform.localScale.z;
 				char c = str [i];
 		
@@ -153,8 +154,8 @@ public class lsysLibrary : MonoBehaviour {
 					Debug.Log (c);
 					GameObject obj = Instantiate (active, active.transform.position, new Quaternion (0, 0, 0, 0), gameObject.transform);
 					obj.transform.localScale = obj.transform.localScale * size;
-					obj.transform.localEulerAngles = new Vector3 (u, l, 0f);
-					float bound = obj.transform.localScale.x * prefabScale;
+					obj.transform.localEulerAngles = new Vector3 ((-1 * u), l, 0f);
+					float bound = obj.transform.localScale.x * 2;
 
 					i++;
 
@@ -173,8 +174,9 @@ public class lsysLibrary : MonoBehaviour {
 					i++;
 					restoreState (str, active, l, r, u, d, size, i);
 				} else if (c == 'n') {
+					Debug.Log (c);
 					GameObject obj = Instantiate (prefab, gameObject.transform.position, gameObject.transform.rotation, gameObject.transform);
-					obj.transform.localEulerAngles = new Vector3 (u, l, 0f);
+					obj.transform.localEulerAngles = new Vector3 ((-1 * u), l, 0f);
 					i++;
 					StartCoroutine (nTurtle (str, obj, l, r, u, d, size, i));
 				} else if (c == 'c') {
@@ -285,15 +287,17 @@ public class lsysLibrary : MonoBehaviour {
 									//obj.transform.Rotate (uu * travel, la * travel * -1f, 0f);
 									//angleTravelled = angleTravelled + (la * travel);
 				travel2 = speed * Time.deltaTime * endpoint;
-				obj.transform.position = obj.transform.position + (obj.transform.forward * travel2);
+				obj.transform.localPosition = obj.transform.localPosition + (obj.transform.forward * travel2);
 				distance = distance + travel2;
-				Debug.Log (distance + "Out of" + endpoint);
+				//Debug.Log (distance + "Out of" + endpoint);
+
 									yield return new WaitForEndOfFrame ();
 								} else  {
 				
 				float adjustment = distance - endpoint;
-				obj.transform.position = obj.transform.position + (obj.transform.forward * adjustment * -1);
-				if (bound < .2f) {
+				obj.transform.localPosition = obj.transform.localPosition + (obj.transform.forward * adjustment * -1);
+
+				if (bound < .01) {
 					yield return new WaitForEndOfFrame ();
 					GameObject prefab; 
 					if (prefabs.Length == 1) {
@@ -307,6 +311,7 @@ public class lsysLibrary : MonoBehaviour {
 
 				} else {
 					yield return new WaitForEndOfFrame ();
+					Debug.Log ("Fturtle I:  " + i);
 					StartCoroutine (renderWait (str, obj, l, r, u, d, size, i));
 					yield break;
 				}
@@ -324,7 +329,7 @@ public class lsysLibrary : MonoBehaviour {
 		//float la = (float)l;
 		//float uu = (float)u;
 		float distance  = 0;
-		float endpoint = 3 * obj.GetComponent<BoxCollider> ().size.x;
+		float endpoint = .22f;
 
 		while (globalIterate == true) {
 			if (distance < endpoint) {
@@ -332,13 +337,15 @@ public class lsysLibrary : MonoBehaviour {
 				//obj.transform.Rotate (uu * travel, la * travel * -1f, 0f);
 				//angleTravelled = angleTravelled + (la * travel);
 				travel2 = speed * Time.deltaTime * endpoint;
-				obj.transform.position = obj.transform.position + (obj.transform.forward * travel2);
+				obj.transform.localPosition = obj.transform.localPosition + (obj.transform.forward * travel2);
 				distance = distance + travel2;
-				Debug.Log (distance + "Out of" + endpoint);
+				//Debug.Log (distance + "Out of" + endpoint);
+
 				yield return new WaitForEndOfFrame ();
 			} else  {
 				float adjustment = distance - endpoint;
-				obj.transform.position = obj.transform.position + (obj.transform.forward * adjustment * -1);
+				obj.transform.localPosition = obj.transform.localPosition + (obj.transform.forward * adjustment * -1);
+
 				yield return new WaitForEndOfFrame ();
 				StartCoroutine(renderWait (str, obj, l, r, u, d, size, i));
 				yield break;

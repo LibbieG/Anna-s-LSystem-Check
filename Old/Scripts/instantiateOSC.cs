@@ -23,8 +23,8 @@ namespace UniOSC{
 		//public Component componentToToggle;
 		public GameObject userPrefab;
 
-		public Vector3 instantiatePosition;
-		public Quaternion instantiateQuaternion;
+		//public Vector3 instantiatePosition;
+		//public Quaternion instantiateQuaternion;
 		public static GameObject[] instantiatedObjects;
 		public static int objectIndex;
 		public int codeSelection;
@@ -65,15 +65,15 @@ namespace UniOSC{
 
 			if (codeSelection == 1) {
 				Debug.Log ("Hi Bitch");
-				instantiatedObjects [objectIndex] = Instantiate (userPrefab, instantiatePosition, instantiateQuaternion);
-				instantiatedObjects [objectIndex].GetComponent<fallingOSC> ().myIndex = objectIndex;
+				instantiatedObjects [objectIndex] = Instantiate (userPrefab, userPrefab.transform.position, Quaternion.identity);
 				Debug.Log (objectIndex);
 				objectIndex = objectIndex + 1;
 				Debug.Log (objectIndex);
 			} else if (codeSelection == 2) {
-				Debug.Log ("Yo Bitch");
+				Debug.Log ("Yo Bitch" + msg.Data [0].ToString ());
+
 				number = msg.Data [0].ToString ();
-				Debug.Log ("Yo: " + msg.Data [0].ToString ());
+
 				Debug.Log (number);
 				instantiateOut.Trigger (number);
 
@@ -81,7 +81,6 @@ namespace UniOSC{
 			} else if (codeSelection == 3) {
 				Debug.Log ("What up bitch?");
 				number = msg.Data [0].ToString ();
-				Debug.Log ("What?: " + msg.Data [0].ToString ());
 				ClientCubeOSC.newAddress (number);
 			}
 

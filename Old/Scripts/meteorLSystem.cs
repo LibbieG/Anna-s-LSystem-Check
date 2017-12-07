@@ -103,14 +103,14 @@ public class meteorLSystem : lsysLibrary {
 			}
 			claimedL.Add (angleLeft);
 			claimedU.Add (angleUp);
+		
 
 			string [] mrule = new string [2] {"m", "mn"};
-			string [] frule = new string[6]{"f", "f", "f", "b", "[F]", "O"};
-			string [] Onerule = new string[3]{"f", "[","O"};
+			string [] frule = new string[7]{"f", "f", "f", "[FF]", "[FFFF]", "[FFF]", "o"};
+			string [] Onerule = new string[3]{"f", "[","o"};
 			string m = mrule [Random.Range (0, 2)];
-			string f = frule [Random.Range (0, 6)];
+			string f = frule [Random.Range (0, 7)];
 			string o = Onerule [Random.Range (0, 3)];
-
 
 
 			ruleset = new Rule[5];
@@ -164,10 +164,10 @@ public class meteorLSystem : lsysLibrary {
 
 
 			string [] mrule = new string [2] {"m", "mn"};
-			string [] frule = new string[6]{"f", "f", "f", "b", "[F]", "O"};
+			string[] frule = new string[7]{ "f", "f", "f", "[FF]", "[FFFF]", "[FFF]", "o" };
 			string [] Onerule = new string[3]{"f", "[","O"};
 			string m = mrule [Random.Range (0, 2)];
-			string f = frule [Random.Range (0, 6)];
+			string f = frule [Random.Range (0, 7)];
 			string o = Onerule [Random.Range (0, 3)];
 
 			Debug.Log ("m: " + m + "f: " + f);
