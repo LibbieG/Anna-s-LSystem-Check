@@ -112,7 +112,7 @@ public class chairLsystem : lsysLibrary {
 			ruleset [4] = new Rule ('b', "o");
 
 		} 
-		generate (currentString, angleLeft, angleRight, angleUp, angleDown, size, act);
+		generate (currentString, angleLeft, angleRight, angleUp, angleDown, size, act, 0);
 	}
 
 
@@ -170,7 +170,7 @@ public class chairLsystem : lsysLibrary {
 			ruleset [4] = new Rule ('b', "o");
 
 		} 
-		generate (curr, angleLeft, angleRight, angleUp, angleDown, size, act);
+		generate (curr, angleLeft, angleRight, angleUp, angleDown, size, act, 0);
 	}
 
 
