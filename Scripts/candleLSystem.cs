@@ -4,16 +4,21 @@ using UnityEngine;
 
 public class candleLSystem : lsysLibrary {
 
-
-
 	public bool randomizeLeft;
-	public int[] randomLeftArray;
+	public int randomLeftMin;
+	public int randomLeftMax;
 
 	public bool randomizeUp;
-	public int[] randomUpArray;
+	public int randomUpMin;
+	public int randomUpMax;
 
-	public float Random_SizeMin;
-	public float Random_SizeMax;
+	public float randomsizeMin;
+	public float randomsizeMax;
+
+	//Rule Setup
+	public enum lSystemOptions {Meteor, Custom};
+	public enum variables {X, F, M
+	};
 
 	public bool Randomize_Variations;
 	public lSystemOptions [] Variations;
@@ -21,115 +26,156 @@ public class candleLSystem : lsysLibrary {
 	public variables[] Variables_1;
 	public string [] Custom_LSystemRules_1;
 
+
 	public variables[] Variables_2;
 	public string [] Custom_LSystemRules_2;
 
-	public float[] customAngleLeft;
-	public float[] customAngleRight;
-	public float[] customAngleUp;
-	public float[] customAngleDown;
+	public int[] customAngleLeft;
+	public int[] customAngleRight;
+	public int[] customAngleUp;
+	public int[] customAngleDown;
 
 
-	//Rule Setup
-	public enum lSystemOptions {Fractal_Tree, Seaweed, Diamond, Custom};
-	public enum variables {X, F
-	};
+	//custom variables
+	List<int> claimedL = new List<int>();
+	List<int> claimedU = new List<int>();
 
-	// Use this for initialization
+
 	public override void Start () {
 		base.Start ();
 		randomAngleRange = true;
+		currentGeneration = 0;
 
-		returnRule (0);
-
-		currentGeneration = 0; 
-
-		generate (currentString);
+		returnRule (gameObject);
 
 	}
 
 	void OnCollisionEnter (Collision col){
 	}
 
-	public override void nextRound () {
-		base.nextRound ();
-
-		if (Randomize_Variations == true) {
-			int variationNum = Random.Range (0, (Variations.Length - 1));
-			returnRule (variationNum);
-
-		} else { 
-			returnRule (0);
-
-		}
-		if (randomizeLeft) {
-			int angleL = Random.Range (0, (customAngleLeft.Length - 1));
-			angleLeft = customAngleLeft [angleL];
-		}
-		if (randomizeUp) {
-			int angleU = Random.Range (0, (customAngleUp.Length - 1));
-			angleLeft = customAngleUp [angleU];
-		}
-
-		Debug.Log ("Next Round");
-		generate (currentString);
-
-	}
 
 
-	public void returnRule (int num){
-		if (Variations [num] == lSystemOptions.Custom) {
-			angleLeft = customAngleLeft[num];
-			angleRight = customAngleRight[num];
-			angleUp = customAngleUp[num];
-			angleDown = customAngleDown[num];
+	public void returnRule (GameObject act){
+		int angleLeft = 0;
+		int angleRight = 0;
+		int angleUp = 0;
+		int angleDown = 0;
+		float size = 1;
+		string currentString = "Hi!";
+
+		if (Variations [0] == lSystemOptions.Custom) {
+			angleLeft = customAngleLeft[0]; 
+			angleRight = customAngleRight[0];
+			angleUp = customAngleUp[0];
+			angleDown = customAngleDown[0];
 
 
-			currentString = Custom_CurrentString;
+			currentString = customCurrentString[0];
 
 			ruleset = new Rule[Variables_1.Length];
 			for(int i = 0; i < Variables_1.Length; i++ ) {
 				ruleset [i] = new Rule (Variables_1 [i].ToString () [0], Custom_LSystemRules_1 [i]);   
 			}
 
-		} else if (Variations [num] == lSystemOptions.Diamond) {
-			angleLeft = 90f;
-			angleRight = 90f;
-			angleUp = setAngleUp;
+		} else if (Variations [0] == lSystemOptions.Meteor) {
+			currentString = "M";
+
+			angleLeft = Random.Range(randomLeftMin, randomLeftMax) * 5;
+			angleRight = 0;
+			angleUp = Random.Range(randomUpMin, randomUpMax) * 5;
 			angleDown = 0;
+			size = Random.Range (randomsizeMin, randomsizeMax);
 
-			currentString = "F+F+F+F";
+			foreach (int i in claimedL) {
+				if (i == angleLeft) {
+					goAgain(currentString,act);
+					return;
+				}
+			}
 
-			ruleset = new Rule[1];
-			ruleset[0] = new Rule ('F', "FF+F++UFS+F");
 
-		} else if (Variations [num] == lSystemOptions.Fractal_Tree) {
-			angleLeft = 45f;
-			angleRight = 45f;
-			angleUp = setAngleUp;
-			angleDown = 0;
+			string [] mrule = new string [2] {"m", "mn"};
+			string [] frule = new string[6]{"f", "f", "f", "b", "[F]", "O"};
+			string [] Onerule = new string[3]{"f", "[","O"};
+			string m = mrule [Random.Range (0, 1)];
+			string f = frule [Random.Range (0, 5)];
+			string o = Onerule [Random.Range (0, 2)];
 
-			currentString = "F";
 
-			ruleset = new Rule[2];
-			ruleset[0] = new Rule ('F', "FF");
-			ruleset[1] = new Rule ('X', "F[X]X");
 
-		} else if (Variations [num] == lSystemOptions.Seaweed) {
-			angleLeft = 22f;
-			angleRight = 22f;
-			angleUp = 25f;
-			angleDown = 10f;
+			ruleset = new Rule[4];
+			ruleset[0] = new Rule ('m', m);
+			ruleset[1] = new Rule ('q', f);
+			ruleset[2] = new Rule ('[' , o);
+			ruleset [3] = new Rule ('n', "f");
+			ruleset [4] = new Rule ('b', "o");
 
-			currentString = "F";
-
-			ruleset = new Rule[1];
-			ruleset[0] = new Rule ('F', "FF-[-F+F+F]+[+F-F-F]");
-
-		}
+		} 
+		generate (currentString, angleLeft, angleRight, angleUp, angleDown, size, act);
 	}
+
+
+
+	public void ruleNoString (string curr, GameObject act){
+		int angleLeft = 0;
+		int angleRight = 0;
+		int angleUp = 0;
+		int angleDown = 0;
+		float size = 1;
+		string currentString = "hi!";
+
+		if (Variations [0] == lSystemOptions.Custom) {
+			angleLeft = customAngleLeft[0];
+			angleRight = customAngleRight[0];
+			angleUp = customAngleUp[0];
+			angleDown = customAngleDown[0];
+
+
+			ruleset = new Rule[Variables_1.Length];
+			for(int i = 0; i < Variables_1.Length; i++ ) {
+				ruleset [i] = new Rule (Variables_1 [i].ToString () [0], Custom_LSystemRules_1 [i]);   
+			}
+
+		} else if (Variations [0] == lSystemOptions.Meteor) {
+
+			angleLeft = Random.Range(randomLeftMin, randomLeftMax) * 5;
+			angleRight = 0;
+			angleUp = Random.Range(randomUpMin, randomUpMax) * 5;
+			angleDown = 0;
+			size = Random.Range (randomsizeMin, randomsizeMax);
+
+			foreach (int i in claimedL) {
+				if (i == angleLeft) {
+					goAgain(curr,act);
+					return;
+				}
+			}
+
+
+			string [] mrule = new string [2] {"m", "mn"};
+			string [] frule = new string[6]{"f", "f", "f", "b", "[F]", "O"};
+			string [] Onerule = new string[3]{"f", "[","O"};
+			string m = mrule [Random.Range (0, 1)];
+			string f = frule [Random.Range (0, 5)];
+			string o = Onerule [Random.Range (0, 2)];
+
+
+
+			ruleset = new Rule[4];
+			ruleset[0] = new Rule ('m', m);
+			ruleset[1] = new Rule ('q', f);
+			ruleset[2] = new Rule ('[' , o);
+			ruleset [3] = new Rule ('n', "f");
+			ruleset [4] = new Rule ('b', "o");
+
+		} 
+		generate (currentString, angleLeft, angleRight, angleUp, angleDown, size, act);
+	}
+
+
+
 	// Update is called once per frame
 	void Update () {
-		
+
 	}
 }

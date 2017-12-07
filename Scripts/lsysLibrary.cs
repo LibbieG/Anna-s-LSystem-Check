@@ -20,36 +20,19 @@ public class lsysLibrary : MonoBehaviour {
 
 	[HideInInspector]
 	public bool randomAngleRange;
-	public float setAngleLeft = 90;
-	public float setAngleRight;
-
-
-	public float setAngleUp = 45;
-	public float setAngleDown;
 
 	[HideInInspector]
 	public bool Randomize_Size;
 
 
 	[HideInInspector]
-	public float angleDown;
-	[HideInInspector]
-	public float angleUp;
-	[HideInInspector]
-	public float angleRight;
-	[HideInInspector]
-	public float angleLeft;
-	[HideInInspector]
 	public float speed;
-	[HideInInspector]
-	public float size;
+
 
 	//Rule Settings
 	[HideInInspector]
 	public Rule[] ruleset;
-	public string Custom_CurrentString;
-	[HideInInspector]
-	public string currentString;
+	public string [] customCurrentString;
 
 
 
@@ -99,7 +82,7 @@ public class lsysLibrary : MonoBehaviour {
 	*/
 
 
-	public void generate(string str) {
+	public void generate(string str, int l, int r, int u, int d, float size, GameObject active) {
 		// An empty StringBuffer that we will fill
 		string nextgen = "";
 
@@ -123,25 +106,24 @@ public class lsysLibrary : MonoBehaviour {
 			nextgen = nextgen + replace;
 		}
 		// Replace sentence
-		currentString = nextgen;
+		string current = nextgen;
 		// Increment generation
 		currentGeneration++;
-		render ();
+		render (current, active, l, r, u, d, size);
 	}
 		
 
 
-
-	IEnumerator renderWait () {
+	IEnumerator renderWait (string str, GameObject active, int l, int r, int u, int d, float size) {
 		
 		yield return new WaitForEndOfFrame();
 		yield return new WaitForEndOfFrame();
 		Debug.Log ("Fire!");
-		render ();
+		render (str, active, l, r, u, d, size);
 
 	}
 
-	public void render () {
+	public void render (string str, GameObject active, int l, int r, int u, int d, float size) {
 		Debug.Log ("Away!");
 		GameObject prefab;
 		if (prefabs.Length == 1) {
@@ -151,43 +133,34 @@ public class lsysLibrary : MonoBehaviour {
 		} else
 			prefab = null;
 
-		if (i < currentString.Length) { 
+		if (i < str.Length) { 
 			if (activeObject != null && prefab != null) {
 				prefabBounds = prefab.GetComponent<Renderer> ().bounds.size.z;
 				prefabScale = prefab.transform.localScale.z;
-				char c = currentString [i];
+				char c = str [i];
 
-				if (c == 'F') {
+				if (c == 'f') {
 					Debug.Log (c);
-					fTurtle (prefab);
-				} else if (c == 'G') {
+					GameObject obj = Instantiate (prefab, active.transform.position, active.transform.rotation, gameObject.transform);
+					obj.transform.localScale = obj.transform.localScale * size;
+
+					StartCoroutine(fTurtle(str, obj, l, r, u, d, size));
+ 
+				} else if (c == 'b') {
 					Debug.Log (c);
-					gTurtle ();
-				} else if (c == '+') {
+					StartCoroutine (goAgain ("F", active));
+				} else if (c == '[') {
 					Debug.Log (c);
-					pTurtle ();
-				} else if (c == '-') {
-					Debug.Log (c);
-					mTurtle ();
-				} else if (c == 'u') {
-					Debug.Log (c);
-					upTurtle ();
-				} else if (c == 'D') {
-					Debug.Log (c);
-					downTurtle ();
-				} else if (c == 'S') {
-					Debug.Log (c);
-					sideTurtle ();
-				}
-				else if (c == '[') {
-					Debug.Log (c);
-					saveState ();
+					saveState (str, active, l, r, u, d, size);
 				} else if (c == ']') {
 					Debug.Log (c);
-					restoreState ();
-				} else {
+					restoreState (str, active, l, r, u, d, size);
+				} else if (c == 'n') {
+					GameObject obj = Instantiate (prefab, gameObject.transform.position, gameObject.transform.rotation, gameObject.transform);
+					StartCoroutine (fTurtle (str, obj, l, r, u, d, size));
+				}else {
 					Debug.Log (c);
-					doNothing ();
+					doNothing (str, active, l, r, u, d, size);
 				}
 				i++;
 
@@ -195,134 +168,50 @@ public class lsysLibrary : MonoBehaviour {
 				Debug.Log ("No activeObject");
 
 				activeObject = gameObject;
-				StartCoroutine (goAgain ());
+				StartCoroutine (goAgain (str,active));
 			}
 		} else {
 			Debug.Log ("All Done!");
-			StartCoroutine (goAgain ());
+			StartCoroutine (goAgain (str, active));
 
 
 		}
 	}
 
-
-
-	IEnumerator moveForward1 (GameObject obj, float dist){
-		float distanceTravelled = 0;
-		length1 = prefabBounds * (obj.transform.localScale.z - prefabScale + 1f) * dist;
-		float travel;
-
-
-		while (globalIterate == true) {
-			if (distanceTravelled < length1) {
-				travel = speed * Time.deltaTime * obj.GetComponent<Renderer> ().bounds.size.y;
-				obj.transform.position = obj.transform.position + (obj.transform.forward * travel);
-				distanceTravelled = distanceTravelled + travel;
-				yield return new WaitForEndOfFrame ();
-			} else {
-				yield break;
-			}
-		}
-	}
-
-	IEnumerator moveForward2 (GameObject obj, float dist){
-		float distanceTravelled = 0;
-		length2 = prefabBounds * (obj.transform.localScale.z - prefabScale + 1f) * dist;
-		float travel;
-		//Debug.Log (length2);
-
-		while (globalIterate == true) {
-			if (distanceTravelled < length2) {
-				travel = speed * Time.deltaTime * obj.GetComponent<Renderer> ().bounds.size.y;
-				obj.transform.position = obj.transform.position + (obj.transform.forward * travel);
-				distanceTravelled = distanceTravelled + travel;
-				yield return new WaitForEndOfFrame ();
-			} else {
-				yield break;
-			}
-		}
-	}
-
-	IEnumerator moveForward3 (GameObject obj, float dist){
-		float distanceTravelled = 0;
-		length3 = prefabBounds * (obj.transform.localScale.z - prefabScale + 1f) * dist;
-		float travel;
-		//Debug.Log (length3);
-
-		while (globalIterate == true) {
-			if (distanceTravelled < length3) {
-				travel = speed * Time.deltaTime * obj.GetComponent<Renderer> ().bounds.size.y;
-				obj.transform.position = obj.transform.position + (obj.transform.forward * travel);
-				distanceTravelled = distanceTravelled + travel;
-				yield return new WaitForEndOfFrame ();
-			} else {
-				Debug.Log ("move Complete");
-				StartCoroutine(renderWait ());
-				yield break;
-			}
-		}
-	}
-
-
-
-	void fTurtle (GameObject prefab) {
-
-		GameObject newObject1 = Instantiate (prefab, activeObject.transform.position, activeObject.transform.rotation, gameObject.transform);
-		GameObject newObject2 = Instantiate (prefab, activeObject.transform.position, activeObject.transform.rotation, gameObject.transform);
-		GameObject newObject3 = Instantiate (prefab, activeObject.transform.position, activeObject.transform.rotation, gameObject.transform);
-		activeObject = newObject3;
-		StartCoroutine (moveForward3 (activeObject, 3f));
-		StartCoroutine (moveForward2 (newObject1, 1f));
-		StartCoroutine (moveForward1 (newObject2, 2f));
-
-	}
-
-	void gTurtle () {
-		StartCoroutine (moveForward3 (activeObject, 3f));
-	}
-
-	IEnumerator plusTurtle (GameObject obj) {
-		float angleTravelled = 0; 
-		float travel;
-		while (globalIterate == true) {
-			if (angleTravelled < angleLeft) {
-				travel = speed * Time.deltaTime;
-				obj.transform.Rotate (0f, angleLeft * travel, 0f);
-				angleTravelled = angleTravelled + (angleLeft * travel);
-				Debug.Log (angleTravelled + "Out of" + angleLeft);
-				yield return new WaitForEndOfFrame ();
-			} else {
-				float adjustment = angleTravelled - angleLeft;
-				obj.transform.Rotate (0f, (-1f * adjustment), 0f);
-				Debug.Log (angleTravelled + "Out of" + angleLeft);
-				yield return new WaitForEndOfFrame ();
-				StartCoroutine(renderWait ());
-				yield break;
-			}
-		}
-	}
-
-	IEnumerator minusTurtle (GameObject obj){
+	IEnumerator fTurtle (string str,GameObject obj, int l, int r, int u, int d, float size){
 		float angleTravelled = 0;
+		float angleTravelledu = 0;
 		float travel;
-		while (globalIterate == true) {
-			if (angleTravelled < angleRight) {
-				travel = speed * Time.deltaTime;
-				obj.transform.Rotate (0f, angleRight * travel * -1f, 0f);
-				angleTravelled = angleTravelled + (angleRight * travel);
-				Debug.Log (angleTravelled + "Out of" + angleRight);
-				yield return new WaitForEndOfFrame ();
-			} else {
-				float adjustment = angleTravelled - angleRight;
-				obj.transform.Rotate (0f, adjustment, 0f);
-				yield return new WaitForEndOfFrame ();
-				StartCoroutine(renderWait ());
-				yield break;
-			}
-		}
-	}
+		float travel2;
+		float la = (float)l;
+		float uu = (float)u;
 
-	IEnumerator uTurtle (GameObject obj){
+							while (globalIterate == true) {
+								if (angleTravelled < la) {
+									travel = speed * Time.deltaTime;
+									obj.transform.Rotate (uu * travel, la * travel * -1f, 0f);
+									angleTravelled = angleTravelled + (la * travel);
+									travel2 = speed * Time.deltaTime * obj.GetComponent<Renderer> ().bounds.size.y;
+									obj.transform.position = obj.transform.position + (obj.transform.forward * travel);
+									Debug.Log (angleTravelled + "Out of" + la);
+									yield return new WaitForEndOfFrame ();
+								} else  {
+									float adjustmentLeft = angleTravelled - la;
+									yield return new WaitForEndOfFrame ();
+				StartCoroutine(renderWait (str, obj, l, r, u, d, size));
+									yield break;
+								}
+							}
+						}
+
+
+
+
+
+
+
+
+	/*IEnumerator uTurtle (GameObject obj){
 		float angleTravelled = 0;
 		float travel;
 		while (globalIterate == true) {
@@ -361,6 +250,7 @@ public class lsysLibrary : MonoBehaviour {
 		}
 	}
 
+	
 	IEnumerator dTurtle (GameObject obj) {
 		float angleTravelled = 0;
 		float travel;
@@ -378,54 +268,35 @@ public class lsysLibrary : MonoBehaviour {
 				yield break;
 			}
 		}
-	}
+	}*/
 
-	void saveState () {
+	void saveState (string str, GameObject obj, int l, int r, int u, int d, float size) {
 		//Save Branch Point
 		lastactiveObject = activeObject;
-		StartCoroutine(renderWait ());
+		StartCoroutine(renderWait (str,obj,l,r,u,d,size));
 
 	}
 
-	void restoreState () {
+	void restoreState (string str, GameObject obj, int l, int r, int u, int d, float size) {
 		//start new branch from position
 		activeObject = lastactiveObject;
-		StartCoroutine(renderWait ());
+		StartCoroutine(renderWait (str,obj,l,r,u,d,size));
 	}
+		
 
-	void pTurtle () {
-		StartCoroutine (plusTurtle (activeObject));
-	}
-
-	void mTurtle () {
-		StartCoroutine (minusTurtle (activeObject));
-	}
-
-	void upTurtle () {
-		StartCoroutine (uTurtle (activeObject));
-	}
-
-	void downTurtle () {
-		StartCoroutine (dTurtle (activeObject));
-	}
-
-	void sideTurtle () {
-		StartCoroutine (sTurtle (activeObject));
-	}
-
-	void doNothing (){
-		StartCoroutine(renderWait ());
+	void doNothing (string str, GameObject obj, int l, int r, int u, int d, float size){
+		StartCoroutine(renderWait (str,obj,l,r,u,d,size));
 	}
 
 
-	public IEnumerator goAgain() {
+	public IEnumerator goAgain(string curr, GameObject act) {
 		Debug.Log ("Go Again");
 		yield return new WaitForEndOfFrame ();
-		nextRound ();
+		nextRound (curr, act);
 
 	}
 
-	public virtual void nextRound () {
+	public virtual void nextRound (string curr, GameObject act) {
 		if (randomizeSpeed) {
 			speed = Random.Range (randomSpeedMin, randomSpeedMax);
 		} else {
@@ -434,6 +305,8 @@ public class lsysLibrary : MonoBehaviour {
 		}
 		
 	}
+
+
 
 
 

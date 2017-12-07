@@ -28,9 +28,5 @@ public class stringLSystem : lsysLibrary {
 	// Update is called once per frame
 	void Update () {
 
-		if (Input.GetKeyDown (KeyCode.Space)) {
-			Debug.Log ("I'm in Update!");
-			render ();
-		}
 	}
 }
