@@ -56,11 +56,12 @@ public class chairLsystem : lsysLibrary {
 
 
 	public void returnRule (GameObject act){
-		int angleLeft =0;
-		int angleRight =0 ;
+		base.nextRound ("non", act);
+		int angleLeft = 0;
+		int angleRight = 0;
 		int angleUp = 0;
 		int angleDown = 0;
-		float size = 1;
+		float size =1;
 		string currentString = "hi";
 
 		if (Variations [0] == lSystemOptions.Custom) {
@@ -88,7 +89,7 @@ public class chairLsystem : lsysLibrary {
 
 			foreach (int i in claimedL) {
 				if (i == angleLeft) {
-					goAgain(currentString,act);
+					goAgain(currentString, act);
 					return;
 				}
 			}
@@ -103,7 +104,7 @@ public class chairLsystem : lsysLibrary {
 
 
 
-			ruleset = new Rule[4];
+			ruleset = new Rule[5];
 			ruleset[0] = new Rule ('m', m);
 			ruleset[1] = new Rule ('q', f);
 			ruleset[2] = new Rule ('[' , o);
@@ -116,13 +117,13 @@ public class chairLsystem : lsysLibrary {
 
 
 
-	public void ruleNoString (string curr, GameObject act){
+	public override void nextRound (string curr, GameObject act){
+		base.nextRound (curr, act);
 		int angleLeft = 0;
 		int angleRight = 0;
 		int angleUp = 0;
 		int angleDown = 0;
 		float size = 1;
-		string currentString = "hi";
 
 		if (Variations [0] == lSystemOptions.Custom) {
 			angleLeft = (int)customAngleLeft[0];
@@ -146,7 +147,7 @@ public class chairLsystem : lsysLibrary {
 
 			foreach (int i in claimedL) {
 				if (i == angleLeft) {
-					goAgain(currentString, act);
+					goAgain(curr, act);
 					return;
 				}
 			}
@@ -161,7 +162,7 @@ public class chairLsystem : lsysLibrary {
 
 
 
-			ruleset = new Rule[4];
+			ruleset = new Rule[5];
 			ruleset[0] = new Rule ('m', m);
 			ruleset[1] = new Rule ('q', f);
 			ruleset[2] = new Rule ('[' , o);
@@ -169,7 +170,7 @@ public class chairLsystem : lsysLibrary {
 			ruleset [4] = new Rule ('b', "o");
 
 		} 
-		generate (currentString, angleLeft, angleRight, angleUp, angleDown, size, act);
+		generate (curr, angleLeft, angleRight, angleUp, angleDown, size, act);
 	}
 
 

@@ -56,6 +56,7 @@ public class meteorLSystem : lsysLibrary {
 
 
 	public void returnRule (GameObject act){
+		base.nextRound ("non", act);
 		int angleLeft = 0;
 		int angleRight = 0;
 		int angleUp = 0;
@@ -78,7 +79,7 @@ public class meteorLSystem : lsysLibrary {
 			}
 
 		} else if (Variations [0] == lSystemOptions.Meteor) {
-			currentString = "M";
+			currentString = "m";
 
 			angleLeft = Random.Range(randomLeftMin, randomLeftMax) * 5;
 			angleRight = 0;
@@ -97,13 +98,13 @@ public class meteorLSystem : lsysLibrary {
 			string [] mrule = new string [2] {"m", "mn"};
 			string [] frule = new string[6]{"f", "f", "f", "b", "[F]", "O"};
 			string [] Onerule = new string[3]{"f", "[","O"};
-			string m = mrule [Random.Range (0, 1)];
-			string f = frule [Random.Range (0, 5)];
-			string o = Onerule [Random.Range (0, 2)];
+			string m = mrule [Random.Range (0, 2)];
+			string f = frule [Random.Range (0, 6)];
+			string o = Onerule [Random.Range (0, 3)];
 
 
 
-			ruleset = new Rule[4];
+			ruleset = new Rule[5];
 			ruleset[0] = new Rule ('m', m);
 			ruleset[1] = new Rule ('q', f);
 			ruleset[2] = new Rule ('[' , o);
@@ -116,7 +117,8 @@ public class meteorLSystem : lsysLibrary {
 
 
 
-	public void ruleNoString (string curr, GameObject act){
+	public override void nextRound (string curr, GameObject act){
+		base.nextRound (curr, act);
 		int angleLeft = 0;
 		int angleRight = 0;
 		int angleUp = 0;
@@ -158,9 +160,10 @@ public class meteorLSystem : lsysLibrary {
 			string f = frule [Random.Range (0, 5)];
 			string o = Onerule [Random.Range (0, 2)];
 
+			Debug.Log ("m: " + m + "f: " + f);
 
 
-			ruleset = new Rule[4];
+			ruleset = new Rule[5];
 			ruleset[0] = new Rule ('m', m);
 			ruleset[1] = new Rule ('q', f);
 			ruleset[2] = new Rule ('[' , o);
@@ -169,6 +172,7 @@ public class meteorLSystem : lsysLibrary {
 
 		} 
 		generate (curr, angleLeft, angleRight, angleUp, angleDown, size, act);
+		Debug.Log ("curr:" + curr);
 	}
 
 

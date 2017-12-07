@@ -30,10 +30,10 @@ public class candleLSystem : lsysLibrary {
 	public variables[] Variables_2;
 	public string [] Custom_LSystemRules_2;
 
-	public int[] customAngleLeft;
-	public int[] customAngleRight;
-	public int[] customAngleUp;
-	public int[] customAngleDown;
+	public float[] customAngleLeft;
+	public float[] customAngleRight;
+	public float[] customAngleUp;
+	public float[] customAngleDown;
 
 
 	//custom variables
@@ -56,18 +56,19 @@ public class candleLSystem : lsysLibrary {
 
 
 	public void returnRule (GameObject act){
+		base.nextRound ("non", act);
 		int angleLeft = 0;
 		int angleRight = 0;
 		int angleUp = 0;
 		int angleDown = 0;
-		float size = 1;
-		string currentString = "Hi!";
+		float size =1;
+		string currentString = "hi";
 
 		if (Variations [0] == lSystemOptions.Custom) {
-			angleLeft = customAngleLeft[0]; 
-			angleRight = customAngleRight[0];
-			angleUp = customAngleUp[0];
-			angleDown = customAngleDown[0];
+			angleLeft = (int)customAngleLeft[0];
+			angleRight = (int)customAngleRight[0];
+			angleUp = (int)customAngleUp[0];
+			angleDown = (int)customAngleDown[0];
 
 
 			currentString = customCurrentString[0];
@@ -88,7 +89,7 @@ public class candleLSystem : lsysLibrary {
 
 			foreach (int i in claimedL) {
 				if (i == angleLeft) {
-					goAgain(currentString,act);
+					goAgain(currentString, act);
 					return;
 				}
 			}
@@ -103,7 +104,7 @@ public class candleLSystem : lsysLibrary {
 
 
 
-			ruleset = new Rule[4];
+			ruleset = new Rule[5];
 			ruleset[0] = new Rule ('m', m);
 			ruleset[1] = new Rule ('q', f);
 			ruleset[2] = new Rule ('[' , o);
@@ -116,19 +117,19 @@ public class candleLSystem : lsysLibrary {
 
 
 
-	public void ruleNoString (string curr, GameObject act){
+	public override void nextRound (string curr, GameObject act){
+		base.nextRound (curr, act);
 		int angleLeft = 0;
 		int angleRight = 0;
 		int angleUp = 0;
 		int angleDown = 0;
 		float size = 1;
-		string currentString = "hi!";
 
 		if (Variations [0] == lSystemOptions.Custom) {
-			angleLeft = customAngleLeft[0];
-			angleRight = customAngleRight[0];
-			angleUp = customAngleUp[0];
-			angleDown = customAngleDown[0];
+			angleLeft = (int)customAngleLeft[0];
+			angleRight = (int)customAngleRight[0];
+			angleUp = (int)customAngleUp[0];
+			angleDown = (int)customAngleDown[0];
 
 
 			ruleset = new Rule[Variables_1.Length];
@@ -146,7 +147,7 @@ public class candleLSystem : lsysLibrary {
 
 			foreach (int i in claimedL) {
 				if (i == angleLeft) {
-					goAgain(curr,act);
+					goAgain(curr, act);
 					return;
 				}
 			}
@@ -161,7 +162,7 @@ public class candleLSystem : lsysLibrary {
 
 
 
-			ruleset = new Rule[4];
+			ruleset = new Rule[5];
 			ruleset[0] = new Rule ('m', m);
 			ruleset[1] = new Rule ('q', f);
 			ruleset[2] = new Rule ('[' , o);
@@ -169,7 +170,8 @@ public class candleLSystem : lsysLibrary {
 			ruleset [4] = new Rule ('b', "o");
 
 		} 
-		generate (currentString, angleLeft, angleRight, angleUp, angleDown, size, act);
+
+		generate (curr, angleLeft, angleRight, angleUp, angleDown, size, act);
 	}
 
 

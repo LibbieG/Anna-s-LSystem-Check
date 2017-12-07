@@ -63,7 +63,7 @@ public class lsysLibrary : MonoBehaviour {
 	public virtual void Start () {
 
 		activeObject = gameObject;
-		globalMoveControl.lsysLibInst [lsysLibrary.lsysLibI] = this;
+		globalMoveControl.lsysLibInst [lsysLibI] = this;
 		lsysItt = globalMoveControl.lsysLibInst[lsysLibrary.lsysLibI];
 		globalMoveControl.lsysLibI++;
 
