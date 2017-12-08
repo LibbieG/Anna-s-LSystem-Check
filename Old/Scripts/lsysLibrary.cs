@@ -5,10 +5,10 @@ using UnityEngine;
 public class lsysLibrary : MonoBehaviour {
 
 	// Set Prefab
+
 	public GameObject[] prefabs;
-	public GameObject[] porches;
-	public GameObject[] towers;
-	public GameObject[] bridges;
+
+
 	[HideInInspector]
 	public float prefabBounds;
 	[HideInInspector]
@@ -53,6 +53,9 @@ public class lsysLibrary : MonoBehaviour {
 	public static bool globalIterate = true;
 	[HideInInspector]
 	public bool localIterate = true;
+	[HideInInspector]
+	public candleReturn [] candleSet;
+
 
 	//Version Control
 	public static int lsysLibI;
@@ -67,9 +70,6 @@ public class lsysLibrary : MonoBehaviour {
 		globalMoveControl.lsysLibInst [lsysLibI] = this;
 		lsysItt = globalMoveControl.lsysLibInst[lsysLibrary.lsysLibI];
 		globalMoveControl.lsysLibI++;
-
-
-
 
 
 	}
@@ -100,6 +100,7 @@ public class lsysLibrary : MonoBehaviour {
 			// Check every rule
 			for (int j = 0; j < ruleset.Length; j++) {
 				char a = ruleset[j].getA();
+
 				// if we match the Rule, get the replacement String out of the Rule
 				if (a == curr) {
 					replace = ruleset[j].getB();
@@ -181,27 +182,105 @@ public class lsysLibrary : MonoBehaviour {
 					StartCoroutine (nTurtle (str, obj, l, r, u, d, size, i));
 				} else if (c == 'c') {
 					Debug.Log (c);
-					active = gameObject;
 					i++;
-					restoreState (str, active, l, r, u, d, size, i);
+					doNothing (str, active, l, r, u, d, size, i);
+
+
 				} else if (c == 'p') {
+					string b = active.name;
 					Debug.Log (c);
-					GameObject prev = active;
-					GameObject obj = Instantiate (porches[Random.Range (0, porches.Length)], active.transform.position, active.transform.rotation,gameObject.transform);
-					StartCoroutine (pturtle(str, obj, l, r, u, d, size, i, active));
-					//instantiate porch
-					//start IEnumerator pTurtle
+					for (int j = 0; j < candleSet.Length; j++) {
+						string a = candleSet[j].getType();
+						string root = candleSet [j].getRoot ();
+						Vector3 loc;
+
+						// if we match the Rule, get the replacement String out of the Rule
+						if (a == "porch") {
+								if (root == b){
+									prefab = candleSet[j].getPrefab();
+								l = candleSet[j].getLeft();
+								loc = candleSet[j].getLoc();
+								float sc = candleSet[j].getScale();
+								GameObject obj = Instantiate (prefab, active.transform.position, active.transform.rotation, gameObject.transform);
+								StartCoroutine (pturtle(str, obj, l, r, u, d, size, i, sc, loc, active));
+									break;
+								}		 
+						}
+
+					}
+
 					i++;
-					restoreState (str, active, l, r, u, d, size, i);
 				} else if (c == 'r') {
 					Debug.Log (c);
+					string b = active.name;
+					for (int j = 0; j < candleSet.Length; j++) {
+						string a = candleSet[j].getType();
+						string root = candleSet [j].getRoot ();
+						Vector3 loc;
+
+						// if we match the Rule, get the replacement String out of the Rule
+						if (a == "bridge") {
+							if (root == b){
+								prefab = candleSet[j].getPrefab();
+								l = candleSet[j].getLeft();
+								loc = candleSet[j].getLoc();
+								float sc = candleSet[j].getScale();
+								GameObject obj = Instantiate (prefab, active.transform.position, active.transform.rotation, gameObject.transform);
+								StartCoroutine (tTurtle(str, obj, l, r, u, d, size, i, sc, loc));
+								break;
+							}		 
+						}
+
+					}
+
 					i++;
-					restoreState (str, active, l, r, u, d, size, i);
 				} else if (c == 't') {
 					Debug.Log (c);
+					string b = active.name;
+					string[] towerChoice = new string[2]{ "tower small", "tower large" };
+					string choice = towerChoice [Random.Range (0, 2)];
+					for (int j = 0; j < candleSet.Length; j++) {
+						string a = candleSet[j].getType();
+						string root = candleSet [j].getRoot ();
+						Vector3 loc;
+
+
+						// if we match the Rule, get the replacement String out of the Rule
+						if (a == choice) {
+							if (root == b){
+								prefab = candleSet[j].getPrefab();
+								l = candleSet[j].getLeft();
+								loc = candleSet[j].getLoc();
+								float sc = candleSet[j].getScale();
+								GameObject obj = Instantiate (prefab, active.transform.position, active.transform.rotation, gameObject.transform);
+								StartCoroutine (tTurtle(str, obj, l, r, u, d, size, i, sc, loc));
+								break;
+							}		 
+						}
+
+					}
+
 					i++;
-					restoreState (str, active, l, r, u, d, size, i);
-				} 
+				} else if (c == '/') {
+					doNothing (str, active, l, r, u, d, size, i);
+					char b;
+					if (i > 0) {
+						b = str [i - 1];
+					} else if (active.name == "candle")
+						b = 'c';
+					else if (active.name == "tower small" ||active.name == "tower large")
+						b = 't';
+					else if (active.name == "bridge")
+						b = 'r';
+					else
+						b = 'm';
+					Debug.Log (c + "and then" + b);
+
+					str = char.ToString (b);
+					StartCoroutine (goAgain (str, active));
+
+
+				}
 				else {
 					Debug.Log (c);
 					i++;
@@ -222,103 +301,84 @@ public class lsysLibrary : MonoBehaviour {
 		}
 	}
 
-	IEnumerator pturtle(string str, GameObject obj, int l, int r, int u, int d, float size, int i, GameObject active){
+	IEnumerator tTurtle(string str, GameObject obj, int l, int r, int u, int d, float size, int i, float sc, Vector3 loc){
 		yield return new WaitForEndOfFrame();
-		float travelled;
-		float distance = 0;
-		Vector3 endpointMove = new Vector3(0,0,0);
-		float endpointRotate = 0;
-		float endpointScale = 0;
+		float travelled = 0;
+		Vector3 startMove = obj.transform.localPosition;
+		Vector3 startRotate = obj.transform.localEulerAngles;
+		Vector3 startScale = obj.transform.localScale;
+		Vector3 endpointMove = sc * loc;
+		float endpointRotate = (float)l;
+		Vector3 endpointScale = (obj.transform.localScale * sc) - obj.transform.localScale;
 		Vector3 travelMove;
-		float travelRotate = 0;
-		float travelScale;
+		float travelRotate;
+		Vector3 travelScale;
 		while (globalIterate == true) {
-			if (distance < travelRotate) {
-				//travel = speed * Time.deltaTime;
-				//obj.transform.Rotate (uu * travel, la * travel * -1f, 0f);
-				//angleTravelled = angleTravelled + (la * travel);
+			if (travelled < endpointRotate) {
+
 				travelMove = speed * Time.deltaTime * endpointMove;
 				travelRotate = speed * Time.deltaTime * endpointRotate;
 				travelScale = speed * Time.deltaTime * endpointScale;
-					
+
+				obj.transform.localPosition = obj.transform.localPosition + travelMove;
+				obj.transform.localEulerAngles = obj.transform.localEulerAngles + new Vector3 (0f, travelRotate, 0f);
+				obj.transform.localScale = obj.transform.localScale + travelScale;
+
 				//obj.transform.position = obj.transform.position + (obj.transform.forward * travel2);
-				distance = distance + travelRotate;
-				Debug.Log (distance + "Out of" + endpointRotate);
+				travelled = travelled + travelRotate;
+				Debug.Log (travelled + "Out of" + travelRotate);
 				yield return new WaitForEndOfFrame ();
 			} else  {
+				obj.transform.localPosition = startMove + endpointMove;
+				obj.transform.localEulerAngles = startRotate + new Vector3 (0f, endpointRotate, 0f);
+				obj.transform.localScale = obj.transform.localScale * sc;
 
-				/*float adjustment = distance - endpoint;
-				obj.transform.position = obj.transform.position + (obj.transform.forward * adjustment * -1);
-				if (bound < .2f) {
-					yield return new WaitForEndOfFrame ();
-					GameObject prefab; 
-					if (prefabs.Length == 1) {
-						prefab = prefabs [0];
-					} else{ 
-						prefab = prefabs [Random.Range (0, (prefabs.Length))];
-					}*/
-
-
-					yield return new WaitForEndOfFrame ();
-					StartCoroutine (renderWait (str, obj, l, r, u, d, size, i));
-					yield break;
-				}
-
+				yield return new WaitForEndOfFrame ();
+				StartCoroutine (renderWait (str, obj, l, r, u, d, size, i));
+				yield break;
 			}
+
 		}
+	}
 
-
-
-
-
-	IEnumerator fTurtle (string str,GameObject obj, int l, int r, int u, int d, float size, float bound, int i){
-		//float angleTravelled = 0;
-		//float travel;
+	IEnumerator pturtle(string str, GameObject obj, int l, int r, int u, int d, float size, int i, float sc, Vector3 loc, GameObject act){
 		yield return new WaitForEndOfFrame();
-		float travel2;
-		//float la = (float)l;
-		//float uu = (float)u;
-		float distance  = 0;
-		float endpoint = bound;
-
+		float travelled = 0;
+		Vector3 startMove = obj.transform.localPosition;
+		Vector3 startRotate = obj.transform.localEulerAngles;
+		Vector3 startScale = obj.transform.localScale;
+		Vector3 endpointMove = sc * loc;
+		float endpointRotate = (float)l;
+		Vector3 endpointScale = (obj.transform.localScale * sc) - obj.transform.localScale;
+		Vector3 travelMove;
+		float travelRotate;
+		Vector3 travelScale;
 		while (globalIterate == true) {
-			if (distance < endpoint) {
-									//travel = speed * Time.deltaTime;
-									//obj.transform.Rotate (uu * travel, la * travel * -1f, 0f);
-									//angleTravelled = angleTravelled + (la * travel);
-				travel2 = speed * Time.deltaTime * endpoint;
-				obj.transform.localPosition = obj.transform.localPosition + (obj.transform.forward * travel2);
-				distance = distance + travel2;
-				//Debug.Log (distance + "Out of" + endpoint);
+			if (travelled < endpointRotate) {
 
-									yield return new WaitForEndOfFrame ();
-								} else  {
-				
-				float adjustment = distance - endpoint;
-				obj.transform.localPosition = obj.transform.localPosition + (obj.transform.forward * adjustment * -1);
+				travelMove = speed * Time.deltaTime * endpointMove;
+				travelRotate = speed * Time.deltaTime * endpointRotate;
+				travelScale = speed * Time.deltaTime * endpointScale;
 
-				if (bound < .01) {
-					yield return new WaitForEndOfFrame ();
-					GameObject prefab; 
-					if (prefabs.Length == 1) {
-							prefab = prefabs [0];
-					} else{ 
-						prefab = prefabs [Random.Range (0, (prefabs.Length))];
-					}
-					
-					StartCoroutine (goAgain ("m", prefab));
-					yield break;
+				obj.transform.localPosition = obj.transform.localPosition + travelMove;
+				obj.transform.localEulerAngles = obj.transform.localEulerAngles + new Vector3 (0f, travelRotate, 0f);
+				obj.transform.localScale = obj.transform.localScale + travelScale;
 
-				} else {
-					yield return new WaitForEndOfFrame ();
-					Debug.Log ("Fturtle I:  " + i);
-					StartCoroutine (renderWait (str, obj, l, r, u, d, size, i));
-					yield break;
-				}
-								
-				}
-							}
-						}
+				//obj.transform.position = obj.transform.position + (obj.transform.forward * travel2);
+				travelled = travelled + travelRotate;
+				Debug.Log (travelled + "Out of" + travelRotate);
+				yield return new WaitForEndOfFrame ();
+			} else  {
+				obj.transform.localPosition = startMove + endpointMove;
+				obj.transform.localEulerAngles = startRotate + new Vector3 (0f, endpointRotate, 0f);
+				obj.transform.localScale = obj.transform.localScale * sc;
+
+				yield return new WaitForEndOfFrame ();
+				StartCoroutine (renderWait (str, act, l, r, u, d, size, i));
+				yield break;
+			}
+		} 
+	}
 
 
 	IEnumerator nTurtle (string str,GameObject obj, int l, int r, int u, int d, float size, int i){
