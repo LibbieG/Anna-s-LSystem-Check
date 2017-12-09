@@ -55,6 +55,7 @@ public class lsysLibrary : MonoBehaviour {
 	public bool localIterate = true;
 	[HideInInspector]
 	public candleReturn [] candleSet;
+	public chairReturn [] chairSet;
 
 
 	//Version Control
@@ -162,7 +163,16 @@ public class lsysLibrary : MonoBehaviour {
 
 					StartCoroutine (fTurtle (str, obj, l, r, u, d, size, bound, i));
  
-				} else if (c == 'b') {
+				} else if (c == 'a') {
+					Debug.Log (c);
+					GameObject obj = Instantiate (prefab, active.transform.position, active.transform.rotation, gameObject.transform);
+					l = (Random.Range (0,3) * 90) - 90;
+					u = (Random.Range (0, 3) * 90) - 90;
+					i++;
+					StartCoroutine(aTurtle (str, obj, l, r, u, d, size, i));
+
+
+				}else if (c == 'b') {
 					Debug.Log (c);
 					i++;
 					StartCoroutine (goAgain ("F", active));
@@ -301,6 +311,28 @@ public class lsysLibrary : MonoBehaviour {
 		}
 	}
 
+
+	IEnumerator aTurtle (string str, GameObject obj, int l, int r, int u, int d, float size, int i){
+		float travelled = 0;
+							float left = (float)l;
+							float up = (float)u;
+		Vector3 startRotation = obj.transform.localEulerAngles;
+							Vector3 travelRotate;
+							Vector3 endRotate = new Vector3 (up, left, 0f);
+		if (travelled < endRotate.x) {
+			travelRotate = speed * Time.deltaTime * new Vector3 (up, left, 0f);
+			obj.transform.localEulerAngles = obj.transform.localEulerAngles + travelRotate;
+			travelled = travelled + travelRotate.x;
+			Debug.Log (travelled + "Out of" + travelRotate.x);
+			yield return new WaitForEndOfFrame ();
+		} else {
+								obj.transform.localEulerAngles = startRotation + endRotate;	
+								yield return new WaitForEndOfFrame ();
+								StartCoroutine (renderWait (str, obj, l, r, u, d, size, i));
+
+		}
+	}
+
 	IEnumerator tTurtle(string str, GameObject obj, int l, int r, int u, int d, float size, int i, float sc, Vector3 loc){
 		yield return new WaitForEndOfFrame();
 		float travelled = 0;
@@ -338,6 +370,56 @@ public class lsysLibrary : MonoBehaviour {
 				yield break;
 			}
 
+		}
+	}
+
+
+	IEnumerator fTurtle (string str,GameObject obj, int l, int r, int u, int d, float size, float bound, int i){
+		//float angleTravelled = 0;
+		//float travel;
+		yield return new WaitForEndOfFrame();
+		float travel2;
+		//float la = (float)l;
+		//float uu = (float)u;
+		float distance  = 0;
+		float endpoint = bound;
+
+		while (globalIterate == true) {
+			if (distance < endpoint) {
+				//travel = speed * Time.deltaTime;
+				//obj.transform.Rotate (uu * travel, la * travel * -1f, 0f);
+				//angleTravelled = angleTravelled + (la * travel);
+				travel2 = speed * Time.deltaTime * endpoint;
+				obj.transform.localPosition = obj.transform.localPosition + (obj.transform.forward * travel2);
+				distance = distance + travel2;
+				//Debug.Log (distance + "Out of" + endpoint);
+
+				yield return new WaitForEndOfFrame ();
+			} else  {
+
+				float adjustment = distance - endpoint;
+				obj.transform.localPosition = obj.transform.localPosition + (obj.transform.forward * adjustment * -1);
+
+				if (bound < .01) {
+					yield return new WaitForEndOfFrame ();
+					GameObject prefab; 
+					if (prefabs.Length == 1) {
+						prefab = prefabs [0];
+					} else{ 
+						prefab = prefabs [Random.Range (0, (prefabs.Length))];
+					}
+
+					StartCoroutine (goAgain ("m", prefab));
+					yield break;
+
+				} else {
+					yield return new WaitForEndOfFrame ();
+					Debug.Log ("Fturtle I:  " + i);
+					StartCoroutine (renderWait (str, obj, l, r, u, d, size, i));
+					yield break;
+				}
+
+			}
 		}
 	}
 
