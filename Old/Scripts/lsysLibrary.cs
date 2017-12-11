@@ -7,6 +7,8 @@ public class lsysLibrary : MonoBehaviour {
 	// Set Prefab
 
 	public GameObject[] prefabs;
+	public Material meteorMaterial;
+
 
 
 	[HideInInspector]
@@ -55,6 +57,7 @@ public class lsysLibrary : MonoBehaviour {
 	public bool localIterate = true;
 	[HideInInspector]
 	public candleReturn [] candleSet;
+	[HideInInspector]
 	public chairReturn [] chairSet;
 
 

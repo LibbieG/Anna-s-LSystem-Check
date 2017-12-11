@@ -10,37 +10,33 @@ public class candleLSystem : lsysLibrary {
 	public GameObject smallBridge;
 	public GameObject largeBridge;
 	public GameObject porch;
-	public GameObject [] bridges; 
+	public GameObject bridgeSmall;
+	public GameObject bridgeLarge;
 
-	public Vector3[] porchTowerSmall;
-	public float ptsScale;
-	public Vector3[] porchTowerLarge;
-	public float ptlScale;
-	public Vector3[] porchCandle;
-	public float pcScale;
-	public Vector3[] porchBridge;
-	public float pbScale;
+	Vector3[][] porchTowerSmall;
+	Vector3[][] towerLargetowerSmall;
+	Vector3 [][] towerSmalltowerSmall;
+	Vector3[][] bridgeSmalltowerSmall;
+	Vector3[][] bridgeLargetowerSmall;
 
-	public Vector3[] towerSmallTowerLarge;
-	public float tstlScale;
-	public Vector3[] towerSmallCandle;
-	public float tscScale;
-	public Vector3[] towerSmallBridge;
-	public float tsbScale;
+	Vector3 [][] towerLargetowerLarge;
+	Vector3[][] porchTowerLarge;
+	Vector3[][] bridgeSmalltowerLarge;
+	Vector3 [][] bridgeLargetowerLarge;
+	Vector3 [][] towerSmalltowerLarge;
 
-	public Vector3[] towerLargetowerSmall;
-	public float tltsScale;
-	public Vector3[] towerLargeCandle;
-	public float tlcScale;
-	public Vector3[] towerLargeBridge;
-	public float tlbScale;
+	Vector3 [][] towerSmallbridgeSmall;
+	Vector3 [][] towerLargebridgeSmall;
+	Vector3 [][] porchbridgeSmall;
 
-	public Vector3[] bridgeSmallTower;
-	public float bstScale;
-	public Vector3[] bridgeLargeTower;
-	public float bltScale;
-	public Vector3[] bridgeCandle;
-	public float bcScale;
+	Vector3 [][] towerSmallbridgeLarge;
+	Vector3 [][] towerLargebridgeLarge;
+	Vector3 [][] porchbridgeLarge;
+
+	Vector3 [][] towerSmallCandle;
+	Vector3 [][] towerLargeCandle;
+	Vector3 [][] porchCandle;
+
 
 
 	public float randomsizeMin;
@@ -65,29 +61,192 @@ public class candleLSystem : lsysLibrary {
 		base.Start ();
 		randomAngleRange = false;
 		currentGeneration = 0;
-
+		candleArray ();
 		returnRule (gameObject);
+	}
 
-		candleSet = new candleReturn [13];
 
-		candleSet [0] = new candleReturn("porch", "tower small", ptsScale, porchTowerSmall, porch);
-		candleSet [1] = new candleReturn ("porch", "tower large", ptlScale, porchTowerLarge, porch);
-		candleSet [2] = new candleReturn ("porch", "porch candle", pcScale, porchCandle, porch);
-		candleSet [3] = new candleReturn ("porch", "porch bridge", pbScale, porchBridge, porch);
-		candleSet [4] = new candleReturn ("tower small", "tower large", tstlScale, towerSmallTowerLarge, smallBuilding);
-		candleSet [5] = new candleReturn ("tower small", "candle", tscScale, towerSmallCandle, smallBuilding);
-		candleSet [6] = new candleReturn ("tower small", "bridge", tsbScale, towerSmallBridge, smallBuilding);
-		candleSet [7] = new candleReturn ("tower large", "tower small", tsbScale, towerLargetowerSmall, largeBuilding);
-		candleSet [8] = new candleReturn ("tower large", "candle", tlcScale, towerLargeCandle, largeBuilding);
-		candleSet [9] = new candleReturn ("tower large", "bridge", tlbScale, towerLargeBridge, largeBuilding);
-		candleSet [10] = new candleReturn ("bridge", "tower large", bltScale, bridgeLargeTower, bridges [Random.Range(0,2)]);
-		candleSet [11] = new candleReturn ("bridge", "tower small", bstScale, bridgeSmallTower, bridges [Random.Range(0,2)]);
-		candleSet [12] = new candleReturn ("bridge", "candle", bcScale, bridgeCandle, bridges[Random.Range(0,2)]);
+	public void candleArray(){
+
+
+		porchTowerSmall = new Vector3[4][]{
+			new Vector3[2]{new Vector3 (0, Random.Range(0,3), -6), new Vector3 (0f,0f,0f)},
+			new Vector3[2] {new Vector3 (-6, Random.Range(0,3), 0), new Vector3 (0, 90, 0)},
+			new Vector3 [2] {new Vector3 (0, Random.Range(0,3), 6), new Vector3 (0, 180, 0)},
+			new Vector3 [2] {new Vector3 (6, Random.Range(0,3), 0), new Vector3 (0, -90, 0)}
+		};
+
+		towerLargetowerSmall = new Vector3[4][] {
+			new Vector3[2]{ new Vector3 (0, Random.Range (-5, 37), -10), new Vector3 (0f, 0f, 0f) },
+			new Vector3[2] { new Vector3 (-10, Random.Range (-5, 37), 0), new Vector3 (0, 90, 0) },
+			new Vector3 [2] { new Vector3 (0, Random.Range (-5, 37), 10), new Vector3 (0, 180, 0) },
+			new Vector3 [2] { new Vector3 (10, Random.Range (-5, 37), 0), new Vector3 (0, -90, 0) }
+		};
+
+		towerSmalltowerSmall = new Vector3[4][] {
+			new Vector3[2]{ new Vector3 (Random.Range(-5,5), Random.Range (-6, 6), -10), new Vector3 (0f, 0f, 0f) },
+			new Vector3[2] { new Vector3 (-10, Random.Range (-6, 6), Random.Range(-5,5)), new Vector3 (0, 90, 0) },
+			new Vector3 [2] { new Vector3 (Random.Range(-5,5), Random.Range (-6, 6), 10), new Vector3 (0, 180, 0) },
+			new Vector3 [2] { new Vector3 (10, Random.Range (-6, 6), Random.Range(-5,5)), new Vector3 (0, -90, 0) }
+		};
+
+		bridgeSmalltowerSmall = new Vector3[4][] {
+			new Vector3[2]{ new Vector3 (Random.Range(-5,5), Random.Range (0, 4), -20), new Vector3 (0f, 0f, 0f) },
+			new Vector3[2] { new Vector3 (-20, Random.Range (-6, 6), Random.Range(0,4)), new Vector3 (0, 90, 0) },
+			new Vector3 [2] { new Vector3 (Random.Range(-5,5), Random.Range (0, 4), 20), new Vector3 (0, 180, 0) },
+			new Vector3 [2] { new Vector3 (20, Random.Range (-6, 6), Random.Range(-5,5)), new Vector3 (0, -90, 0) }
+		};
+
+		bridgeLargetowerSmall = new Vector3[4][] {
+			new Vector3[2]{ new Vector3 (Random.Range(-5,5), Random.Range (-4, 0), -43), new Vector3 (0f, 0f, 0f) },
+			new Vector3[2] { new Vector3 (-43, Random.Range (-4, 0), Random.Range(-5,5)), new Vector3 (0, 90, 0) },
+			new Vector3 [2] { new Vector3 (Random.Range(-5,5), Random.Range (-4, 0), 43), new Vector3 (0, 180, 0) },
+			new Vector3 [2] { new Vector3 (43, Random.Range (-4, 0), Random.Range(-5,5)), new Vector3 (0, -90, 0) }
+		};
+
+
+		porchTowerLarge = new Vector3[4][]{
+			new Vector3[2]{new Vector3 (0, Random.Range(0,37), -6), new Vector3 (0f,0f,0f)},
+			new Vector3[2] {new Vector3 (-6, Random.Range(0,37), 0), new Vector3 (0, 90, 0)},
+			new Vector3 [2] {new Vector3 (0, Random.Range(0,37), 6), new Vector3 (0, 180, 0)},
+			new Vector3 [2] {new Vector3 (6, Random.Range(0,37), 0), new Vector3 (0, -90, 0)}
+		};
+
+		towerLargetowerLarge = new Vector3[4][] {
+			new Vector3[2]{ new Vector3 (0, Random.Range (-37, 37), -10), new Vector3 (0f, 0f, 0f) },
+			new Vector3[2] { new Vector3 (-10, Random.Range (-37, 37), 0), new Vector3 (0, 90, 0) },
+			new Vector3 [2] { new Vector3 (0, Random.Range (-37, 37), 10), new Vector3 (0, 180, 0) },
+			new Vector3 [2] { new Vector3 (10, Random.Range (-37, 37), 0), new Vector3 (0, -90, 0) }
+		};
+
+		towerSmalltowerLarge = new Vector3[4][] {
+			new Vector3[2]{ new Vector3 (Random.Range(-5,5), Random.Range (-6, 40), -10), new Vector3 (0f, 0f, 0f) },
+			new Vector3[2] { new Vector3 (-10, Random.Range (-6, 40), Random.Range(-5,5)), new Vector3 (0, 90, 0) },
+			new Vector3 [2] { new Vector3 (Random.Range(-5,5), Random.Range (-6, 40), 10), new Vector3 (0, 180, 0) },
+			new Vector3 [2] { new Vector3 (10, Random.Range (-6, 40), Random.Range(-5,5)), new Vector3 (0, -90, 0) }
+		};
+
+		bridgeSmalltowerLarge = new Vector3[4][] {
+			new Vector3[2]{ new Vector3 (Random.Range(-5,5), Random.Range (0, 40), -20), new Vector3 (0f, 0f, 0f) },
+			new Vector3[2] { new Vector3 (-20, Random.Range (0,40), Random.Range(-5,5)), new Vector3 (0, 90, 0) },
+			new Vector3 [2] { new Vector3 (Random.Range(-5,5), Random.Range (0, 40), 20), new Vector3 (0, 180, 0) },
+			new Vector3 [2] { new Vector3 (20, Random.Range (0,40), Random.Range(-5,5)), new Vector3 (0, -90, 0) }
+		};
+
+		bridgeLargetowerLarge = new Vector3[4][] {
+			new Vector3[2]{ new Vector3 (Random.Range(-5,5), Random.Range (-4, 32), -43), new Vector3 (0f, 0f, 0f) },
+			new Vector3[2] { new Vector3 (-43, Random.Range (-4, 32), Random.Range(-5,5)), new Vector3 (0, 90, 0) },
+			new Vector3 [2] { new Vector3 (Random.Range(-5,5), Random.Range (-4, 32), 43), new Vector3 (0, 180, 0) },
+			new Vector3 [2] { new Vector3 (43, Random.Range (-4, 32), Random.Range(-5,5)), new Vector3 (0, -90, 0) }
+		};
+
+		//Next Set
+
+
+		porchbridgeSmall = new Vector3[2][]{
+			new Vector3[2]{new Vector3 (0, 10, -6), new Vector3 (0f,0f,0f)},
+			new Vector3[2] {new Vector3 (0, 10, 6), new Vector3 (0, 180, 0)},
+
+		};
+
+		towerLargebridgeSmall = new Vector3[2][] {
+			new Vector3[2] { new Vector3 (-20, Random.Range (-38,0), 0), new Vector3 (0, 90, 0) },
+			new Vector3 [2] { new Vector3 (20, Random.Range (-38,0), 0), new Vector3 (0, -90, 0) }
+		};
+
+		towerSmallbridgeSmall = new Vector3[2][] {
+			new Vector3[2] { new Vector3 (-20, Random.Range (-6, 0), 0), new Vector3 (0, 90, 0) },
+			new Vector3 [2] { new Vector3 (20, Random.Range (-6, 0), 0), new Vector3 (0, -90, 0) }
+		};
+
+		porchbridgeLarge = new Vector3[4][]{
+			new Vector3[2]{new Vector3 (Random.Range(-20,20), 18, 6), new Vector3 (0f,180f,0f)},
+			new Vector3[2]{new Vector3 (Random.Range(-20,20), 4, 6), new Vector3 (0f,180f,0f)},
+			new Vector3[2]{new Vector3 (Random.Range(-20,20), 18, -6), new Vector3 (0f,0f,0f)},
+			new Vector3[2]{new Vector3 (Random.Range(-20,20), 4, -6), new Vector3 (0f,0f,0f)},
+
+		};
+
+		towerLargebridgeLarge = new Vector3[2][] {
+			new Vector3[2] { new Vector3 (-40, Random.Range (-34,0), 0), new Vector3 (0, 90, 0) },
+			new Vector3 [2] { new Vector3 (40, Random.Range (-34,0), 0), new Vector3 (0, -90, 0) }
+		};
+
+		towerSmallbridgeLarge = new Vector3[2][] {
+			new Vector3[2] { new Vector3 (-40, Random.Range (0,4), 0), new Vector3 (0, 90, 0) },
+			new Vector3 [2] { new Vector3 (40, Random.Range (0,4), 0), new Vector3 (0, -90, 0) }
+		};
+
+
+		//New section
+
+
+		porchCandle = new Vector3[13][]{
+			new Vector3[2]{new Vector3 (.74f, 8.45f, -4.12f), new Vector3 (0f,0f,0f)},
+			new Vector3[2]{new Vector3 (.6f, 6f, -3.76f), new Vector3 (0f,0f,0f)},
+			new Vector3[2]{new Vector3 (.2f, 2.92f, -3.76f), new Vector3 (0f,0f,0f)},
+			new Vector3[2] {new Vector3 (-1.09f, 7.56f, -1.02f), new Vector3 (0, 90, 0)},
+			new Vector3[2] {new Vector3 (-1.09f, 4.52f, -1.02f), new Vector3 (0, 90, 0)},
+			new Vector3[2] {new Vector3 (-1.83f, .49f, -2.32f), new Vector3 (0, 90, 0)},
+			new Vector3 [2] {new Vector3 (1.7f, 8.2f, .45f), new Vector3 (0, 180, 0)},
+			new Vector3 [2] {new Vector3 (1.1f, 5.62f, .77f), new Vector3 (0, 180, 0)},
+			new Vector3 [2] {new Vector3 (-.2f, 3.4f, .82f), new Vector3 (0, 180, 0)},
+			new Vector3 [2] {new Vector3 (.78f, 1f, 2.06f), new Vector3 (0, 180, 0)},
+			new Vector3 [2] {new Vector3 (3.22f, 7.56f, -1.4f), new Vector3 (0, -90, 0)},
+			new Vector3 [2] {new Vector3 (3.22f, 4.53f, -1.4f), new Vector3 (0, -90, 0)},
+			new Vector3 [2] {new Vector3 (4.38f, .44f, -1.4f), new Vector3 (0, -90, 0)}
+		};
+
+		towerLargeCandle = new Vector3[4][] {
+			new Vector3[2]{ new Vector3 (.49f, Random.Range(-6,8), -4.6f), new Vector3 (0f, 0f, 0f) },
+			new Vector3[2] { new Vector3 (-1.2f, Random.Range(-6,8), -1.27f), new Vector3 (0, 90, 0) },
+			new Vector3 [2] { new Vector3 (.76f, Random.Range(-6,8), 1.53f), new Vector3 (0, 180, 0) },
+			new Vector3 [2] { new Vector3 (4.4f, Random.Range(-6,8), -1.71f), new Vector3 (0, -90, 0) }
+		};
+
+		towerSmallCandle = new Vector3[11][] {
+			new Vector3[2]{ new Vector3 (.92f, .92f, -4.42f), new Vector3 (0f, 0f, 0f) },
+			new Vector3[2]{ new Vector3 (.92f, 4.42f, -4.42f), new Vector3 (0f, 0f, 0f) },
+			new Vector3[2]{ new Vector3 (.92f, 8.37f, -4.42f), new Vector3 (0f, 0f, 0f) },
+			new Vector3[2] { new Vector3 ( - 1.96f, .63f, .03f), new Vector3 (0, 90, 0) },
+			new Vector3[2] { new Vector3 (-2.17f, 2.2f, -2.27f), new Vector3 (0, 90, 0) },
+			new Vector3[2] { new Vector3 ( - 1.95f, 5.79f, -2.27f), new Vector3 (0, 90, 0) },
+			new Vector3[2] { new Vector3 ( -1.77f, 9.35f, -2.27f), new Vector3 (0, 90, 0) },
+			new Vector3 [2] { new Vector3 (.79f, 8.62f, .28f) , new Vector3 (0, 180, 0) },
+			new Vector3 [2] { new Vector3 (2.01f, 3.29f, 1.04f) , new Vector3 (0, 180, 0) },
+			new Vector3 [2] { new Vector3 (3.56f, 2.44f, -1.85f), new Vector3 (0, -90, 0) },
+			new Vector3 [2] { new Vector3 (2.76f, 6.03f, -1.85f), new Vector3 (0, -90, 0) }
+		};
+
+
+
+		candleSet = new candleReturn [19];
+
+		candleSet [0] = new candleReturn("porch", "tower small", .5f , porchTowerSmall, porch);
+		candleSet [1] = new candleReturn ("tower large", "tower small", Random.Range (.5f, 1.2f), towerLargetowerSmall, largeBuilding);
+		candleSet [2] = new candleReturn ("tower small", "tower small", Random.Range (.8f, 1.2f), towerSmalltowerSmall, smallBuilding);
+		candleSet [3] = new candleReturn ("bridge small", "tower small", Random.Range (.5f, 1.2f), bridgeSmalltowerSmall, bridgeSmall);
+		candleSet [4] = new candleReturn ("bridge large", "tower small", Random.Range(.8f, 1.2f), bridgeLargetowerSmall, bridgeLarge);
+		candleSet [5] = new candleReturn("porch", "tower large", .5f , porchTowerLarge, porch);
+		candleSet [6] = new candleReturn ("tower large", "tower large", Random.Range (.5f, 1.2f), towerLargetowerLarge, largeBuilding);
+		candleSet [7] = new candleReturn ("tower small", "tower large", Random.Range (.8f, 1.2f), towerSmalltowerLarge, smallBuilding);
+		candleSet [8] = new candleReturn ("bridge small", "tower large", Random.Range (.5f, 1.2f), bridgeSmalltowerLarge, bridgeSmall);
+		candleSet [9] = new candleReturn ("bridge large", "tower large", Random.Range(.8f, 1.2f), bridgeLargetowerLarge, bridgeLarge);
+		candleSet [10] = new candleReturn("porch", "bridge small", .5f , porchbridgeSmall, porch);
+		candleSet [11] = new candleReturn ("tower large", "bridge small", Random.Range (.5f, 1.2f), towerLargebridgeSmall, largeBuilding);
+		candleSet [12] = new candleReturn ("tower small", "bridge small", Random.Range (.8f, 1.2f), towerSmallbridgeSmall, smallBuilding);
+		candleSet [13] = new candleReturn("porch", "bridge large", .5f , porchbridgeLarge, porch);
+		candleSet [14] = new candleReturn ("tower large", "bridge large", Random.Range (.5f, 1.2f), towerLargebridgeLarge, largeBuilding);
+		candleSet [15] = new candleReturn ("tower small", "bridge large", Random.Range (.8f, 1.2f), towerSmallbridgeLarge, smallBuilding);
+		candleSet [16] = new candleReturn("porch", "candle", .25f , porchCandle, porch);
+		candleSet [17] = new candleReturn ("tower large", "candle", .25f, towerLargeCandle, largeBuilding);
+		candleSet [18] = new candleReturn ("tower small", "candle", .25f, towerSmallCandle, smallBuilding);
 
 	}
 
 
 	void OnCollisionEnter (Collision col){
+
 	}
 
 
@@ -127,6 +286,7 @@ public class candleLSystem : lsysLibrary {
 
 
 	public override void nextRound (string curr, GameObject act){
+		candleArray();
 		base.nextRound ("non", act);
 		int angleLeft = 0;
 		int angleRight = 0;
