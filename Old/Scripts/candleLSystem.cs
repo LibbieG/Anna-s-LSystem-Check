@@ -7,8 +7,6 @@ public class candleLSystem : lsysLibrary {
 
 	public GameObject smallBuilding;
 	public GameObject largeBuilding;
-	public GameObject smallBridge;
-	public GameObject largeBridge;
 	public GameObject porch;
 	public GameObject bridgeSmall;
 	public GameObject bridgeLarge;
@@ -205,17 +203,17 @@ public class candleLSystem : lsysLibrary {
 		};
 
 		towerSmallCandle = new Vector3[11][] {
-			new Vector3[2]{ new Vector3 (.92f, .92f, -4.42f), new Vector3 (0f, 0f, 0f) },
-			new Vector3[2]{ new Vector3 (.92f, 4.42f, -4.42f), new Vector3 (0f, 0f, 0f) },
-			new Vector3[2]{ new Vector3 (.92f, 8.37f, -4.42f), new Vector3 (0f, 0f, 0f) },
-			new Vector3[2] { new Vector3 ( - 1.96f, .63f, .03f), new Vector3 (0, 90, 0) },
-			new Vector3[2] { new Vector3 (-2.17f, 2.2f, -2.27f), new Vector3 (0, 90, 0) },
-			new Vector3[2] { new Vector3 ( - 1.95f, 5.79f, -2.27f), new Vector3 (0, 90, 0) },
-			new Vector3[2] { new Vector3 ( -1.77f, 9.35f, -2.27f), new Vector3 (0, 90, 0) },
-			new Vector3 [2] { new Vector3 (.79f, 8.62f, .28f) , new Vector3 (0, 180, 0) },
-			new Vector3 [2] { new Vector3 (2.01f, 3.29f, 1.04f) , new Vector3 (0, 180, 0) },
-			new Vector3 [2] { new Vector3 (3.56f, 2.44f, -1.85f), new Vector3 (0, -90, 0) },
-			new Vector3 [2] { new Vector3 (2.76f, 6.03f, -1.85f), new Vector3 (0, -90, 0) }
+			new Vector3[3]{ new Vector3 (.92f, .92f, -4.42f), new Vector3 (0f, 0f, 0f), new Vector3 (0f, 0f, 0f)  },
+			new Vector3[3]{ new Vector3 (.92f, 4.42f, -4.42f), new Vector3 (0f, 0f, 0f), new Vector3 (0f, 0f, 0f) },
+			new Vector3[3]{ new Vector3 (.92f, 8.37f, -4.42f), new Vector3 (0f, 0f, 0f), new Vector3 (0f, 0f, 0f) },
+			new Vector3[3] { new Vector3 ( - 1.96f, .63f, .03f), new Vector3 (0, 90, 0), new Vector3 (0f, 0f, 0f) },
+			new Vector3[3] { new Vector3 (-2.17f, 2.2f, -2.27f), new Vector3 (0, 90, 0), new Vector3 (0f, 0f, 0f) },
+			new Vector3[3] { new Vector3 ( - 1.95f, 5.79f, -2.27f), new Vector3 (0, 90, 0), new Vector3 (0f, 0f, 0f) },
+			new Vector3[3] { new Vector3 ( -1.77f, 9.35f, -2.27f), new Vector3 (0, 90, 0), new Vector3 (0f, 0f, 0f) },
+			new Vector3 [3] { new Vector3 (.79f, 8.62f, .28f) , new Vector3 (0, 180, 0), new Vector3 (0f, 0f, 0f) },
+			new Vector3 [3] { new Vector3 (2.01f, 3.29f, 1.04f) , new Vector3 (0, 180, 0), new Vector3 (0f, 0f, 0f) },
+			new Vector3 [3] { new Vector3 (3.56f, 2.44f, -1.85f), new Vector3 (0, -90, 0), new Vector3 (0f, 0f, 0f) },
+			new Vector3 [3] { new Vector3 (2.76f, 6.03f, -1.85f), new Vector3 (0, -90, 0), new Vector3 (0f, 0f, 0f) }
 		};
 
 

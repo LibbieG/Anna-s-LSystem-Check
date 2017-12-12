@@ -210,39 +210,61 @@ public class lsysLibrary : MonoBehaviour {
 						// if we match the Rule, get the replacement String out of the Rule
 						if (a == "porch") {
 								if (root == b){
+								bool go = false;
+								float sc = 1;
+								loc = new Vector3 (0,0,0);
+								while (go == false){
 									prefab = candleSet[j].getPrefab();
 								l = candleSet[j].getLeft();
-								loc = candleSet[j].getLoc();
-								float sc = candleSet[j].getScale();
-								GameObject obj = Instantiate (prefab, active.transform.position, active.transform.rotation, gameObject.transform);
-								StartCoroutine (pturtle(str, obj, l, r, u, d, size, i, sc, loc, active));
-									break;
-								}		 
+								sc = candleSet[j].getScale();
+									loc = (candleSet [j].getLoc () * sc * active.transform.localScale.y) + active.transform.localPosition;
+									go = checkLocation(loc, (sc*active.transform.localScale.y*prefab.GetComponentInChildren<BoxCollider>().bounds.size.y*100f), root);
+								
+								}
+										GameObject obj = Instantiate (prefab, active.transform.position, active.transform.rotation, gameObject.transform);
+										StartCoroutine (pturtle(str, obj, l, r, u, d, size, i, sc, loc, active));
+										break;
 						}
 
 					}
 
-					i++;
+										i++;
+										}
 				} else if (c == 'r') {
 					Debug.Log (c);
 					string b = active.name;
+											string bridge;
+											int min = 0;
+											int max = 2;
+											int choose = Random.Range(min, max);
+											if (choose == 0)bridge = "bridge small";
+											else bridge = "bridge large";
+													
 					for (int j = 0; j < candleSet.Length; j++) {
 						string a = candleSet[j].getType();
 						string root = candleSet [j].getRoot ();
 						Vector3 loc;
 
 						// if we match the Rule, get the replacement String out of the Rule
-						if (a == "bridge") {
-							if (root == b){
-								prefab = candleSet[j].getPrefab();
-								l = candleSet[j].getLeft();
-								loc = candleSet[j].getLoc();
-								float sc = candleSet[j].getScale();
-								GameObject obj = Instantiate (prefab, active.transform.position, active.transform.rotation, gameObject.transform);
-								StartCoroutine (tTurtle(str, obj, l, r, u, d, size, i, sc, loc));
-								break;
-							}		 
-						}
+												if (a == bridge) {
+													if (root == b){
+														bool go = false;
+								loc = new Vector3 (0,0,0);
+								float sc = 1;
+														while (go == false){
+															prefab = candleSet[j].getPrefab();
+															l = candleSet[j].getLeft();
+															sc = candleSet[j].getScale();
+									loc = (candleSet [j].getLoc () * sc * active.transform.localScale.y) + active.transform.localPosition;
+									go = checkLocation(loc, (sc*active.transform.localScale.y*prefab.GetComponentInChildren<BoxCollider>().bounds.size.y*100f), root);
+
+																}
+																GameObject obj = Instantiate (prefab, active.transform.position, active.transform.rotation, gameObject.transform);
+																StartCoroutine (pturtle(str, obj, l, r, u, d, size, i, sc, loc, active));
+																break;
+																}
+
+																}
 
 					}
 
@@ -259,17 +281,25 @@ public class lsysLibrary : MonoBehaviour {
 
 
 						// if we match the Rule, get the replacement String out of the Rule
-						if (a == choice) {
-							if (root == b){
-								prefab = candleSet[j].getPrefab();
-								l = candleSet[j].getLeft();
-								loc = candleSet[j].getLoc();
-								float sc = candleSet[j].getScale();
-								GameObject obj = Instantiate (prefab, active.transform.position, active.transform.rotation, gameObject.transform);
-								StartCoroutine (tTurtle(str, obj, l, r, u, d, size, i, sc, loc));
-								break;
-							}		 
-						}
+																		if (a == choice) {
+																			if (root == b){
+																				bool proceed = false;
+								loc = new Vector3 (0,0,0);
+								float sc = 1;
+																				while (proceed == false){
+																					prefab = candleSet[j].getPrefab();
+																					l = candleSet[j].getLeft();
+																					sc = candleSet[j].getScale();
+									loc = (candleSet [j].getLoc () * sc * active.transform.localScale.y) + active.transform.localPosition;
+									proceed = checkLocation(loc, (sc*active.transform.localScale.y*prefab.GetComponentInChildren<BoxCollider>().bounds.size.y*100f), root);
+
+																						}
+																						GameObject obj = Instantiate (prefab, active.transform.position, active.transform.rotation, gameObject.transform);
+																						StartCoroutine (pturtle(str, obj, l, r, u, d, size, i, sc, loc, active));
+																						break;
+																						}
+
+																						}
 
 					}
 
@@ -336,7 +366,7 @@ public class lsysLibrary : MonoBehaviour {
 		}
 	}
 
-	IEnumerator tTurtle(string str, GameObject obj, int l, int r, int u, int d, float size, int i, float sc, Vector3 loc){
+	/*IEnumerator tTurtle(string str, GameObject obj, int l, int r, int u, int d, float size, int i, float sc, Vector3 loc){
 		yield return new WaitForEndOfFrame();
 		float travelled = 0;
 		Vector3 startMove = obj.transform.localPosition;
@@ -375,6 +405,7 @@ public class lsysLibrary : MonoBehaviour {
 
 		}
 	}
+	*/
 
 
 	IEnumerator fTurtle (string str,GameObject obj, int l, int r, int u, int d, float size, float bound, int i){
@@ -600,6 +631,21 @@ public class lsysLibrary : MonoBehaviour {
 			Debug.Log ("speed =" + speed);
 		}
 		
+	}
+
+	bool checkLocation (Vector3 center, float radius, string name)
+	{
+		Collider[] hitColliders = Physics.OverlapSphere(center, radius);
+		foreach  (Collider hit in hitColliders)
+		{
+			if (hit.name == name) {
+				Debug.Log ("All Good");
+			} else {
+				Debug.Log ("collision :  " + hit.name);
+				return false;
+			}
+		}
+		return true;
 	}
 
 
