@@ -217,18 +217,23 @@ public class lsysLibrary : MonoBehaviour {
 									prefab = candleSet[j].getPrefab();
 								l = candleSet[j].getLeft();
 								sc = candleSet[j].getScale();
-									loc = (candleSet [j].getLoc () * sc * active.transform.localScale.y) + active.transform.localPosition;
+									float mult = active.transform.localScale.y;
+									if (active.name == "candle") {
+										mult = mult / 5;
+										sc = sc / 5;
+									}
+									loc = (candleSet [j].getLoc () * mult) + active.transform.localPosition;
+									Debug.Log ("Left: " + l);
 									go = checkLocation(loc, (sc*active.transform.localScale.y*prefab.GetComponentInChildren<BoxCollider>().bounds.size.y*100f), root);
 								
 								}
 										GameObject obj = Instantiate (prefab, active.transform.position, active.transform.rotation, gameObject.transform);
 										StartCoroutine (pturtle(str, obj, l, r, u, d, size, i, sc, loc, active));
-										break;
+								i++;
+								return;
 						}
 
 					}
-
-										i++;
 										}
 				} else if (c == 'r') {
 					Debug.Log (c);
@@ -255,20 +260,27 @@ public class lsysLibrary : MonoBehaviour {
 															prefab = candleSet[j].getPrefab();
 															l = candleSet[j].getLeft();
 															sc = candleSet[j].getScale();
-									loc = (candleSet [j].getLoc () * sc * active.transform.localScale.y) + active.transform.localPosition;
+									float mult = active.transform.localScale.y;
+									if (active.name == "candle") {
+										mult = mult / 5;
+										sc = sc / 5;
+									}
+									loc = (candleSet [j].getLoc () * mult) + active.transform.localPosition;
 									go = checkLocation(loc, (sc*active.transform.localScale.y*prefab.GetComponentInChildren<BoxCollider>().bounds.size.y*100f), root);
-
+									Debug.Log ("Left: " + l);
 																}
-																GameObject obj = Instantiate (prefab, active.transform.position, active.transform.rotation, gameObject.transform);
-																StartCoroutine (pturtle(str, obj, l, r, u, d, size, i, sc, loc, active));
-																break;
+								GameObject obj = Instantiate (prefab, active.transform.position, active.transform.rotation, gameObject.transform);
+							
+								StartCoroutine (pturtle(str, obj, l, r, u, d, size, i, sc, loc, active));
+								i++;
+								return;
 																}
 
 																}
 
 					}
 
-					i++;
+
 				} else if (c == 't') {
 					Debug.Log (c);
 					string b = active.name;
@@ -290,13 +302,23 @@ public class lsysLibrary : MonoBehaviour {
 																					prefab = candleSet[j].getPrefab();
 																					l = candleSet[j].getLeft();
 																					sc = candleSet[j].getScale();
-									loc = (candleSet [j].getLoc () * sc * active.transform.localScale.y) + active.transform.localPosition;
+									float mult = active.transform.localScale.y;
+									if (active.name == "candle") {
+										mult = mult / 5;
+										sc = sc / 5;
+									}
+									loc = (candleSet [j].getLoc () * mult) + active.transform.localPosition;
+									Debug.Log ("Left: " + l);
+				
 									proceed = checkLocation(loc, (sc*active.transform.localScale.y*prefab.GetComponentInChildren<BoxCollider>().bounds.size.y*100f), root);
 
 																						}
 																						GameObject obj = Instantiate (prefab, active.transform.position, active.transform.rotation, gameObject.transform);
+							
 																						StartCoroutine (pturtle(str, obj, l, r, u, d, size, i, sc, loc, active));
-																						break;
+
+								i++;
+								return;
 																						}
 
 																						}
@@ -305,10 +327,11 @@ public class lsysLibrary : MonoBehaviour {
 
 					i++;
 				} else if (c == '/') {
+					i++;
 					doNothing (str, active, l, r, u, d, size, i);
 					char b;
-					if (i > 0) {
-						b = str [i - 1];
+					if (i > 1) {
+						b = str [i - 2];
 					} else if (active.name == "candle")
 						b = 'c';
 					else if (active.name == "tower small" ||active.name == "tower large")
@@ -460,12 +483,18 @@ public class lsysLibrary : MonoBehaviour {
 	IEnumerator pturtle(string str, GameObject obj, int l, int r, int u, int d, float size, int i, float sc, Vector3 loc, GameObject act){
 		yield return new WaitForEndOfFrame();
 		float travelled = 0;
+
 		Vector3 startMove = obj.transform.localPosition;
 		Vector3 startRotate = obj.transform.localEulerAngles;
 		Vector3 startScale = obj.transform.localScale;
-		Vector3 endpointMove = sc * loc;
-		float endpointRotate = (float)l;
-		Vector3 endpointScale = (obj.transform.localScale * sc) - obj.transform.localScale;
+		Vector3 endpointMove = loc;
+		float endpointRotate = l - obj.transform.localEulerAngles.y;
+		if (endpointRotate == 0) {
+			endpointRotate = 360;
+		}
+
+		Vector3 endpointScale = sc * act.transform.localScale;
+
 		Vector3 travelMove;
 		float travelRotate;
 		Vector3 travelScale;
@@ -482,15 +511,15 @@ public class lsysLibrary : MonoBehaviour {
 
 				//obj.transform.position = obj.transform.position + (obj.transform.forward * travel2);
 				travelled = travelled + travelRotate;
-				Debug.Log (travelled + "Out of" + travelRotate);
+				Debug.Log (travelled + "Out of" + endpointRotate);
 				yield return new WaitForEndOfFrame ();
 			} else  {
 				obj.transform.localPosition = startMove + endpointMove;
 				obj.transform.localEulerAngles = startRotate + new Vector3 (0f, endpointRotate, 0f);
-				obj.transform.localScale = obj.transform.localScale * sc;
+				obj.transform.localScale = endpointScale;
 
 				yield return new WaitForEndOfFrame ();
-				StartCoroutine (renderWait (str, act, l, r, u, d, size, i));
+				StartCoroutine (renderWait (str, obj, l, r, u, d, size, i));
 				yield break;
 			}
 		} 

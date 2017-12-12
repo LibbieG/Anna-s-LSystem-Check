@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-public class candleReturn : MonoBehaviour {
+public class candleReturn {
 
 	string type;
 	string rootType;
@@ -10,7 +10,6 @@ public class candleReturn : MonoBehaviour {
 	float baseScale;
 	GameObject prefab;
 	int selection;
-	bool intercept = false;
 	Vector3 startpoint;
 	//Vector3 rotation;
 
@@ -32,7 +31,7 @@ public class candleReturn : MonoBehaviour {
 	}
 
 	public Vector3 getLoc (){
-		selection = Random.Range (0, locArray.Length);
+		
 		Vector3 location = locArray [selection] [0];
 		return location;
 
@@ -46,6 +45,7 @@ public class candleReturn : MonoBehaviour {
 	}
 
 	public int getLeft() {
+		selection = Random.Range (0, locArray.Length);
 		int left = (int)locArray [selection] [1].y;
 
 		return left;

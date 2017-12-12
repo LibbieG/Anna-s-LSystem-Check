@@ -262,14 +262,15 @@ public class candleLSystem : lsysLibrary {
 			currentString = "c";
 			size = Random.Range (randomsizeMin, randomsizeMax);
 
-			string[] crule = new string [9] { "p", "p","p", "t", "t", "[t]","/t", "r", "/r" };
-			string[] prule = new string[9]{  "p", "p","p", "t", "t", "[t]","/t", "r", "/r" };
-			string[] trule = new string[9]{  "p", "p","pp", "t", "t", "[t]","/t", "r", "/r" };
+			string[] crule = new string [7] { "p", "p","p", "t", "t", "[t]","/t"};
+			string[] prule = new string[9]{  "p", "p","p", "t", "t", "[t]","t", "r", "/r" };
+			string[] trule = new string[9]{  "p", "p","pp", "t", "t", "[t]","/t", "r", "r" };
 			string [] rrule = new string[7]{ "p", "p","p", "t", "t", "[t]","/t"};
 			string c = crule [Random.Range (0, 7)];
-			string p = prule [Random.Range (0, 3)];
-			string t = trule [Random.Range (0, 3)];
-			string r = rrule [Random.Range (0, 2)];
+			Debug.Log ("Checking Random : " + c);
+			string p = prule [Random.Range (0, 9)];
+			string t = trule [Random.Range (0, 9)];
+			string r = rrule [Random.Range (0, 7)];
 
 			ruleset = new Rule[4];
 			ruleset [0] = new Rule ('c', c);
@@ -297,14 +298,15 @@ public class candleLSystem : lsysLibrary {
 			currentString = "c";
 			size = Random.Range (randomsizeMin, randomsizeMax);
 
-			string[] crule = new string [9] { "p", "p","p", "t", "t", "[t]","/t", "r", "/r" };
-			string[] prule = new string[9]{  "p", "p","p", "t", "t", "[t]","/t", "r", "/r" };
-			string[] trule = new string[9]{  "p", "p","pp", "t", "t", "[t]","/t", "r", "/r" };
+			string[] crule = new string [7] { "p", "p","p", "t", "t", "[t]","/t" };
+			string[] prule = new string[9]{  "p", "p","p", "t", "t", "[t]","t", "r", "r" };
+			string[] trule = new string[9]{  "p", "p","pp", "t", "t", "[t]","t", "r", "/r" };
 			string [] rrule = new string[7]{ "p", "p","p", "t", "t", "[t]","/t"};
 			string c = crule [Random.Range (0, 7)];
-			string p = prule [Random.Range (0, 3)];
-			string t = trule [Random.Range (0, 3)];
-			string r = rrule [Random.Range (0, 2)];
+			Debug.Log ("Checking Random : " + c);
+			string p = prule [Random.Range (0, 9)];
+			string t = trule [Random.Range (0, 9)];
+			string r = rrule [Random.Range (0, 7)];
 
 			ruleset = new Rule[4];
 			ruleset [0] = new Rule ('c', c);
