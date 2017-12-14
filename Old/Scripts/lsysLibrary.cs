@@ -116,8 +116,7 @@ public class lsysLibrary : MonoBehaviour {
 		}
 		// Replace sentence
 		string current = nextgen;
-		Debug.Log ("current" + current);
-		// Increment generation
+
 		currentGeneration++;
 		render (current, active, l, r, u, d, size, x);
 	}
@@ -128,7 +127,7 @@ public class lsysLibrary : MonoBehaviour {
 		
 		yield return new WaitForEndOfFrame();
 		yield return new WaitForEndOfFrame();
-		Debug.Log ("Fire!");
+		//Debug.Log ("Fire!");
 		Debug.Log ("renderWait i:  " + i);
 		render (str, active, l, r, u, d, size, i);
 
@@ -146,9 +145,7 @@ public class lsysLibrary : MonoBehaviour {
 			prefab = null;
 			Debug.Log ("prefab null");
 		}
-
-		Debug.Log ("string: " + str);
-		Debug.Log ("i:  " +i);
+			
 		if (i < str.Length) { 
 			if (prefab != null) {
 				prefabBounds = prefab.GetComponent<BoxCollider> ().bounds.size.z;
@@ -207,6 +204,7 @@ public class lsysLibrary : MonoBehaviour {
 						string root = candleSet [j].getRoot ();
 						Vector3 loc;
 
+
 						// if we match the Rule, get the replacement String out of the Rule
 						if (a == "porch") {
 								if (root == b){
@@ -215,7 +213,7 @@ public class lsysLibrary : MonoBehaviour {
 								loc = new Vector3 (0,0,0);
 								while (go == false){
 									prefab = candleSet[j].getPrefab();
-								l = candleSet[j].getLeft();
+									l = candleSet [j].getLeft () - (int)active.transform.localEulerAngles.y;
 								sc = candleSet[j].getScale();
 									float mult = active.transform.localScale.y;
 									if (active.name == "candle") {
@@ -223,64 +221,64 @@ public class lsysLibrary : MonoBehaviour {
 										sc = sc / 5;
 									}
 									loc = (candleSet [j].getLoc () * mult) + active.transform.localPosition;
-									Debug.Log ("Left: " + l);
+									//Debug.Log ("Left: " + l);
+									Debug.Log("Location:" +loc);
 									go = checkLocation(loc, (sc*active.transform.localScale.y*prefab.GetComponentInChildren<BoxCollider>().bounds.size.y*100f), root);
-								
+									if (go == true)
+										break;
 								}
 										GameObject obj = Instantiate (prefab, active.transform.position, active.transform.rotation, gameObject.transform);
-										StartCoroutine (pturtle(str, obj, l, r, u, d, size, i, sc, loc, active));
-								i++;
-								return;
+								i++;		
+								StartCoroutine (pturtle(str, obj, l, r, u, d, size, i, sc, loc, active));
+
+								break;
 						}
 
 					}
 										}
 				} else if (c == 'r') {
-					Debug.Log (c);
 					string b = active.name;
-											string bridge;
-											int min = 0;
-											int max = 2;
-											int choose = Random.Range(min, max);
-											if (choose == 0)bridge = "bridge small";
-											else bridge = "bridge large";
-													
+					Debug.Log (c);
+					string[] bridges = new string[2] { "bridge small", "bridge large" };
+					string bridge = bridges [Random.Range (0, 2)];
+
 					for (int j = 0; j < candleSet.Length; j++) {
 						string a = candleSet[j].getType();
 						string root = candleSet [j].getRoot ();
 						Vector3 loc;
 
+
 						// if we match the Rule, get the replacement String out of the Rule
-												if (a == bridge) {
-													if (root == b){
-														bool go = false;
-								loc = new Vector3 (0,0,0);
+						if (a == bridge) {
+							if (root == b){
+								bool go = false;
 								float sc = 1;
-														while (go == false){
-															prefab = candleSet[j].getPrefab();
-															l = candleSet[j].getLeft();
-															sc = candleSet[j].getScale();
+								loc = new Vector3 (0,0,0);
+								while (go == false){
+									prefab = candleSet[j].getPrefab();
+									l = candleSet[j].getLeft()- (int)active.transform.localEulerAngles.y;
+									sc = candleSet[j].getScale();
 									float mult = active.transform.localScale.y;
 									if (active.name == "candle") {
 										mult = mult / 5;
 										sc = sc / 5;
 									}
 									loc = (candleSet [j].getLoc () * mult) + active.transform.localPosition;
+									Debug.Log("Location:" +loc);
+									//Debug.Log ("Left: " + l);
 									go = checkLocation(loc, (sc*active.transform.localScale.y*prefab.GetComponentInChildren<BoxCollider>().bounds.size.y*100f), root);
-									Debug.Log ("Left: " + l);
-																}
+									if (go == true)
+										break;
+								}
 								GameObject obj = Instantiate (prefab, active.transform.position, active.transform.rotation, gameObject.transform);
-							
-								StartCoroutine (pturtle(str, obj, l, r, u, d, size, i, sc, loc, active));
-								i++;
-								return;
-																}
+								i++;		
+								StartCoroutine (tTurtle(str, obj, l, r, u, d, size, i, sc, loc, active));
 
-																}
+								break;
+							}
 
+						}
 					}
-
-
 				} else if (c == 't') {
 					Debug.Log (c);
 					string b = active.name;
@@ -292,6 +290,7 @@ public class lsysLibrary : MonoBehaviour {
 						Vector3 loc;
 
 
+
 						// if we match the Rule, get the replacement String out of the Rule
 																		if (a == choice) {
 																			if (root == b){
@@ -300,7 +299,7 @@ public class lsysLibrary : MonoBehaviour {
 								float sc = 1;
 																				while (proceed == false){
 																					prefab = candleSet[j].getPrefab();
-																					l = candleSet[j].getLeft();
+									l = candleSet[j].getLeft()- (int)active.transform.localEulerAngles.y;
 																					sc = candleSet[j].getScale();
 									float mult = active.transform.localScale.y;
 									if (active.name == "candle") {
@@ -308,24 +307,27 @@ public class lsysLibrary : MonoBehaviour {
 										sc = sc / 5;
 									}
 									loc = (candleSet [j].getLoc () * mult) + active.transform.localPosition;
-									Debug.Log ("Left: " + l);
+									Debug.Log("Location:" +loc);
+									//Debug.Log ("Left: " + l);
 				
 									proceed = checkLocation(loc, (sc*active.transform.localScale.y*prefab.GetComponentInChildren<BoxCollider>().bounds.size.y*100f), root);
-
+									if (proceed == true)
+										break;
 																						}
 																						GameObject obj = Instantiate (prefab, active.transform.position, active.transform.rotation, gameObject.transform);
-							
-																						StartCoroutine (pturtle(str, obj, l, r, u, d, size, i, sc, loc, active));
-
 								i++;
-								return;
+							
+																						StartCoroutine (tTurtle(str, obj, l, r, u, d, size, i, sc, loc, active));
+
+
+								break;
 																						}
 
 																						}
 
 					}
 
-					i++;
+
 				} else if (c == '/') {
 					i++;
 					doNothing (str, active, l, r, u, d, size, i);
@@ -339,7 +341,7 @@ public class lsysLibrary : MonoBehaviour {
 					else if (active.name == "bridge")
 						b = 'r';
 					else
-						b = 'm';
+						b = 'c';
 					Debug.Log (c + "and then" + b);
 
 					str = char.ToString (b);
@@ -449,7 +451,7 @@ public class lsysLibrary : MonoBehaviour {
 				travel2 = speed * Time.deltaTime * endpoint;
 				obj.transform.localPosition = obj.transform.localPosition + (obj.transform.forward * travel2);
 				distance = distance + travel2;
-				//Debug.Log (distance + "Out of" + endpoint);
+				Debug.Log (distance + "Out of" + endpoint);
 
 				yield return new WaitForEndOfFrame ();
 			} else  {
@@ -487,10 +489,12 @@ public class lsysLibrary : MonoBehaviour {
 		Vector3 startMove = obj.transform.localPosition;
 		Vector3 startRotate = obj.transform.localEulerAngles;
 		Vector3 startScale = obj.transform.localScale;
-		Vector3 endpointMove = loc;
+		Vector3 endpointMove = loc - startMove;
 		float endpointRotate = l - obj.transform.localEulerAngles.y;
 		if (endpointRotate == 0) {
-			endpointRotate = 360;
+			endpointRotate = Mathf.Abs (360);
+		} else if (endpointRotate == -90) {
+			endpointRotate = Mathf.Abs (270);
 		}
 
 		Vector3 endpointScale = sc * act.transform.localScale;
@@ -498,26 +502,77 @@ public class lsysLibrary : MonoBehaviour {
 		Vector3 travelMove;
 		float travelRotate;
 		Vector3 travelScale;
+		float tracking = sc * act.transform.localScale.y;
 		while (globalIterate == true) {
-			if (travelled < endpointRotate) {
+			if (travelled < tracking) {
 
 				travelMove = speed * Time.deltaTime * endpointMove;
 				travelRotate = speed * Time.deltaTime * endpointRotate;
 				travelScale = speed * Time.deltaTime * endpointScale;
+				float travelTrack = speed * Time.deltaTime * endpointScale.y;
 
 				obj.transform.localPosition = obj.transform.localPosition + travelMove;
 				obj.transform.localEulerAngles = obj.transform.localEulerAngles + new Vector3 (0f, travelRotate, 0f);
 				obj.transform.localScale = obj.transform.localScale + travelScale;
 
 				//obj.transform.position = obj.transform.position + (obj.transform.forward * travel2);
-				travelled = travelled + travelRotate;
-				Debug.Log (travelled + "Out of" + endpointRotate);
+				travelled = travelled + travelTrack;
+				Debug.Log (travelled + "Out of" + tracking);
 				yield return new WaitForEndOfFrame ();
 			} else  {
-				obj.transform.localPosition = startMove + endpointMove;
+				obj.transform.localPosition = loc;
 				obj.transform.localEulerAngles = startRotate + new Vector3 (0f, endpointRotate, 0f);
 				obj.transform.localScale = endpointScale;
+				Debug.Log ("Going On" + travelled + "Out of" + tracking);
+				yield return new WaitForEndOfFrame ();
+				StartCoroutine (renderWait (str, act, l, r, u, d, size, i));
+				yield break;
+			}
+		} 
+	}
 
+	IEnumerator tTurtle(string str, GameObject obj, int l, int r, int u, int d, float size, int i, float sc, Vector3 loc, GameObject act){
+		yield return new WaitForEndOfFrame();
+		float travelled = 0;
+
+		Vector3 startMove = obj.transform.localPosition;
+		Vector3 startRotate = obj.transform.localEulerAngles;
+		Vector3 startScale = obj.transform.localScale;
+		Vector3 endpointMove = loc - startMove;
+		float endpointRotate = l - obj.transform.localEulerAngles.y;
+		if (endpointRotate == 0) {
+			endpointRotate = Mathf.Abs (360);
+		} else if (endpointRotate == - 90) {
+			endpointRotate = Mathf.Abs (270);
+		}
+
+		Vector3 endpointScale = sc * act.transform.localScale;
+		float tracking = sc * act.transform.localScale.y;
+
+		Vector3 travelMove;
+		float travelRotate;
+		Vector3 travelScale;
+		while (globalIterate == true) {
+			if (travelled < tracking) {
+
+				travelMove = speed * Time.deltaTime * endpointMove;
+				travelRotate = speed * Time.deltaTime * endpointRotate;
+				travelScale = speed * Time.deltaTime * endpointScale;
+				float travelTrack = speed * Time.deltaTime * endpointScale.y;
+
+				obj.transform.localPosition = obj.transform.localPosition + travelMove;
+				obj.transform.localEulerAngles = obj.transform.localEulerAngles + new Vector3 (0f, travelRotate, 0f);
+				obj.transform.localScale = obj.transform.localScale + travelScale;
+
+				//obj.transform.position = obj.transform.position + (obj.transform.forward * travel2);
+				travelled = travelled + travelTrack;
+				Debug.Log (travelled + "Out of" + tracking);
+				yield return new WaitForEndOfFrame ();
+			} else  {
+				obj.transform.localPosition = loc;
+				obj.transform.localEulerAngles = startRotate + new Vector3 (0f, endpointRotate, 0f);
+				obj.transform.localScale = endpointScale;
+				Debug.Log ("Finished Moving : " + travelled + "Out of" + tracking);
 				yield return new WaitForEndOfFrame ();
 				StartCoroutine (renderWait (str, obj, l, r, u, d, size, i));
 				yield break;
@@ -664,11 +719,13 @@ public class lsysLibrary : MonoBehaviour {
 
 	bool checkLocation (Vector3 center, float radius, string name)
 	{
+
 		Collider[] hitColliders = Physics.OverlapSphere(center, radius);
 		foreach  (Collider hit in hitColliders)
 		{
 			if (hit.name == name) {
 				Debug.Log ("All Good");
+				return true;
 			} else {
 				Debug.Log ("collision :  " + hit.name);
 				return false;
